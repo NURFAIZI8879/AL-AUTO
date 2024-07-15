@@ -1,0 +1,162 @@
+html {
+  scroll-behavior: smooth;
+  height: 100%; /* Menetapkan tinggi html */
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Mengatur tinggi minimum body */
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  background-color: #002b5e;
+  padding: 10px 20px;
+  width: 100%;
+  height: 5%;
+  position: fixed;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  height: auto;
+  max-height: 30px;
+}
+
+.navbar-nav {
+  display: flex;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+  padding-left: 0;
+}
+
+.nav-item {
+  margin-left: 15px;
+}
+
+.nav-link {
+  color: #f9f5d8;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+.nav-link:hover {
+  background-color: #008cff;
+  color: #ffffff;
+  border-radius: 15px;
+  transition: 0.5s;
+}
+
+/* Body */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.absen .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20vh; /* Adjust the height as needed */
+  padding: 20px;
+}
+
+.absen h2 {
+  text-align: center;
+  margin-bottom: 5px;
+  color: #002b5e;
+}
+
+.absen .form-group {
+  margin-bottom: 15px;
+}
+
+.absen .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.absen .form-group input,
+.absen .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: 'Poppins';
+}
+
+.absen button {
+  background-color: #002b5e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: 'Poppins';
+}
+
+.absen button:hover {
+  background-color: #008cff;
+  color: white;
+  transition: 0.5s ease;
+}
+
+.absen form {
+  width: 100%;
+  max-width: 500px; /* Adjust the max width as needed */
+}
+
+/* Footer Section */
+#footer {
+  background-color: #002b5e;
+  color: #fff;
+  padding: 40px 0;
+}
+
+.footer_2 {
+  display: flex;
+}
+
+.footer_2 .col {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.footer_2 .col h4 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  margin-left: 15%;
+}
+
+.footer_2 .col p {
+  font-size: 14px;
+  margin-left: 15%
+}

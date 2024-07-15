@@ -1,0 +1,72 @@
+#services {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.service_1i {
+  margin-top: 60px;
+}
+
+.service_1ibg {
+  background: #002b5e;
+}
+
+.service_1i1 h6 {
+  border-bottom: 1px solid #625e5e;
+  padding-bottom: 15px;
+}
+
+.service_1i2 h3 {
+  background: #002b5e;
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  border-radius: 50%;
+  border: 5px solid #ffdd00;
+}
+
+.service_1i2 {
+  position: absolute;
+  width: 100%;
+  top: -60px;
+}
+
+.service_1i {
+  position: relative;
+}
+
+.service_1i1 {
+  padding-top: 85px;
+  padding-bottom: 30px;
+}
+
+.service_1ibg1 {
+  background: #ffdd00;
+}
+
+.service_1i2bg h3 {
+  background: #ffdd00;
+  border: 5px solid #002b5e;
+}
+
+.service_1ibg1 h6 {
+  border-bottom: 1px solid #ffec6e;
+}
+
+.service_1ibg2 {
+  background: #000;
+}
+
+.service_1i2bg1 h3 {
+  background: #000;
+  border: 5px solid #ffdd00;
+}
+
+.service_1ibg2 .button:hover {
+  background: #002b5e !important;
+}
+
+.service_1o {
+  margin-top: 30px;
+}
