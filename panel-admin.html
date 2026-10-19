@@ -173,8 +173,11 @@
         return true;
       }
 
+      var isLoadingUsers = false;
       async function loadUsers() {
+        if (isLoadingUsers) return;
         if (!await ensureAdmin()) return;
+        isLoadingUsers = true;
         statusEl.textContent = "Memuat user...";
         usersTbody.innerHTML = "";
         try {
@@ -199,10 +202,14 @@
             usersTbody.appendChild(tr);
           });
         } catch (e) { statusEl.textContent = "Gagal memuat user: " + (e.message || e); }
+        finally { isLoadingUsers = false; }
       }
 
+      var isLoadingAtt = false;
       async function loadAttendance() {
+        if (isLoadingAtt) return;
         if (!await ensureAdmin()) return;
+        isLoadingAtt = true;
         attTbody.innerHTML = "";
         try {
           var snap = await window.ALAuth.db.collection("attendance").get();
@@ -220,6 +227,7 @@
             attTbody.appendChild(tr);
           });
         } catch (e) { attTbody.innerHTML = "<tr><td colspan='6'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>"; }
+        finally { isLoadingAtt = false; }
       }
 
       usersTbody.addEventListener("click", async function (e) {
