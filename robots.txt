@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /panel-admin.html
+Disallow: /admin.html

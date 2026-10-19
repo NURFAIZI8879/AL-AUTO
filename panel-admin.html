@@ -176,12 +176,19 @@
 
       async function ensureAdmin() {
         if (!window.ALAuth) return false;
-        // tunggu ready
         if (!window.ALAuth.ready) {
           await new Promise(function(res){ var t=setInterval(function(){ if(window.ALAuth.ready){ clearInterval(t); res(); } },200); });
         }
-        if (!window.ALAuth.currentUser) { statusEl.textContent = "Silakan login terlebih dahulu."; return false; }
-        if (!window.ALAuth.isAdmin) { statusEl.textContent = "Akses ditolak. Hanya admin."; return false; }
+        if (!window.ALAuth.currentUser) {
+          // Tidak login -> arahkan ke halaman login (panel admin tersembunyi)
+          window.location.replace("login.html");
+          return false;
+        }
+        if (!window.ALAuth.isAdmin) {
+          // Bukan admin -> arahkan ke beranda (tanpa menampilkan panel)
+          window.location.replace("index.html");
+          return false;
+        }
         return true;
       }
 

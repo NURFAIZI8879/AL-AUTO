@@ -264,8 +264,8 @@
       if (window.ALAuth.isAdmin) {
         var adminLi = document.createElement("li");
         adminLi.className = "nav-item nav-auth";
-        var isAdminPage = window.location.pathname.toLowerCase().endsWith("admin.html");
-        adminLi.innerHTML = '<a class="nav-link ' + (isAdminPage ? "active" : "") + '" href="admin.html">Admin Panel</a>';
+        var isAdminPage = window.location.pathname.toLowerCase().endsWith("panel-admin.html");
+        adminLi.innerHTML = '<a class="nav-link ' + (isAdminPage ? "active" : "") + '" href="panel-admin.html">Admin Panel</a>';
         nav.appendChild(adminLi);
       }
     } else {
