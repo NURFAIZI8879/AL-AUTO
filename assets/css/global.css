@@ -907,3 +907,97 @@ main.page {
     transform: none;
   }
 }
+
+/* ---------- 14. Responsif tambahan (mobile & tablet) ---------- */
+@media (max-width: 768px) {
+  .hero,
+  .page-hero {
+    min-height: auto;
+    padding-top: 96px;
+    padding-bottom: 64px;
+  }
+
+  .hero-logo {
+    padding: 12px 18px;
+    border-radius: 16px;
+  }
+
+  .hero-logo img {
+    height: clamp(48px, 12vw, 72px);
+  }
+
+  .btn {
+    padding: 12px 22px;
+    font-size: 14.5px;
+  }
+
+  .hero-actions,
+  .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn,
+  .cta-actions .btn {
+    width: 100%;
+  }
+
+  .card {
+    padding: 24px 20px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
+  }
+
+  .wa-fab {
+    width: 52px;
+    height: 52px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .wa-fab svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .footer-grid {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-text {
+    font-size: 15px;
+  }
+
+  .brand-text small {
+    font-size: 8.5px;
+  }
+
+  .hero-tagline {
+    font-size: 15px;
+    margin: 20px auto 28px;
+  }
+
+  .section-head h2 {
+    font-size: 22px;
+  }
+
+  .page-hero-content h1 {
+    font-size: 28px;
+  }
+
+  .page-hero-content p {
+    font-size: 14.5px;
+  }
+
+  .navbar-inner {
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
