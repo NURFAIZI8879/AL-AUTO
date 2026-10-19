@@ -1,168 +1,78 @@
 /* =========================================================
-   AL AUTO — Auth (Backend API)
-   Menggunakan .NET backend (http://localhost:5000).
+   AL AUTO — Auth (Firebase Auth + Firestore)
    ========================================================= */
 (function () {
   "use strict";
 
-  var API_BASE = "http://localhost:5000";
-  var TOKEN_KEY = "alauto_token";
+  var cfg = window.firebaseConfig || {};
+  var isConfigured = cfg.apiKey && cfg.apiKey !== "YOUR_API_KEY" && cfg.projectId && cfg.projectId !== "YOUR_PROJECT_ID";
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      var s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
 
   window.ALAuth = {
     ready: false,
+    configured: isConfigured,
     currentUser: null,
     userDoc: null,
     isAdmin: false,
     isApproved: false,
-    apiBase: API_BASE,
     init: init,
     login: login,
     register: register,
     logout: logout,
-    onAuthChanged: null,
-    db: null
+    onAuthChanged: null
   };
 
-  function getToken() { return localStorage.getItem(TOKEN_KEY); }
-  function setToken(t) { if (t) localStorage.setItem(TOKEN_KEY, t); else localStorage.removeItem(TOKEN_KEY); }
-
-  async function api(path, opts) {
-    opts = opts || {};
-    var headers = opts.headers || {};
-    headers["Content-Type"] = "application/json";
-    var t = getToken();
-    if (t) headers["Authorization"] = "Bearer " + t;
-    var res = await fetch(API_BASE + path, {
-      method: opts.method || "GET",
-      headers: headers,
-      body: opts.body ? JSON.stringify(opts.body) : undefined
-    });
-    if (!res.ok) {
-      var err = await res.text();
-      throw new Error(err || ("HTTP " + res.status));
-    }
-    if (res.status === 204) return null;
-    return res.json();
-  }
-
-  // ---- DB shim (Firestore-like) ----
-  function makeCollection(name) {
-    return {
-      _filters: [], _order: null, _limit: null,
-      where: function () { return this; },
-      orderBy: function () { return this; },
-      limit: function () { return this; },
-      doc: function (id) {
-        return {
-          get: async function () {
-            try {
-              if (name === "users") {
-                var u = await api("/api/users/" + id); // may not exist; fallback
-                return { exists: true, data: function () { return u; } };
-              }
-            } catch (e) {}
-            // fallback: fetch all and find
-            if (name === "users") {
-              var list = await api("/api/users");
-              var found = list.find(function (x) { return x.uid === id; });
-              return { exists: !!found, data: function () { return found; } };
-            }
-            return { exists: false, data: function () { return null; } };
-          },
-          set: async function (data) {
-            if (name === "users") {
-              await api("/api/users", { method: "POST", body: { name: data.name, email: data.email, phone: data.phone, password: data.password || "changeme", role: data.role || "user", status: data.status || "pending" } });
-            }
-          },
-          update: async function (data) {
-            if (name === "users") {
-              await api("/api/users/" + id, { method: "PUT", body: { name: data.name, email: data.email, phone: data.phone, role: data.role, status: data.status, password: data.password } });
-            }
-          },
-          delete: async function () {
-            if (name === "users") await api("/api/users/" + id, { method: "DELETE" });
-            if (name === "attendance") await api("/api/attendance/" + id, { method: "DELETE" });
-          }
-        };
-      },
-      add: async function (data) {
-        if (name === "attendance") {
-          var r = await api("/api/attendance", { method: "POST", body: { idAbsen: data.idAbsen, idPeserta: data.idPeserta, tanggal: data.tanggal, status: data.status } });
-          return { id: r.id };
-        }
-        if (name === "users") {
-          var r2 = await api("/api/users", { method: "POST", body: { name: data.name, email: data.email, phone: data.phone, password: data.password || "changeme", role: data.role || "user", status: data.status || "pending" } });
-          return { id: r2.uid };
-        }
-      },
-      get: async function () {
-        var items = [];
-        if (name === "users") {
-          try { items = await api("/api/users"); } catch (e) { items = []; }
-        } else if (name === "attendance") {
-          try { items = await api("/api/attendance"); } catch (e) { items = []; }
-        }
-        // normalize to docs with .data() and .id
-        var docs = items.map(function (it) {
-          return { id: it.uid || it.id, data: function () { return it; } };
-        });
-        return { empty: docs.length === 0, size: docs.length, forEach: function (cb) { docs.forEach(cb); } };
-      }
-    };
-  }
-
-  async function restoreSession() {
-    var token = getToken();
-    if (!token) { window.ALAuth.currentUser = null; window.ALAuth.userDoc = null; window.ALAuth.isAdmin = false; window.ALAuth.isApproved = false; return; }
-    try {
-      var me = await api("/api/auth/me");
-      window.ALAuth.currentUser = { uid: me.uid, email: me.email };
-      window.ALAuth.userDoc = me;
-      window.ALAuth.isAdmin = me.role === "admin";
-      window.ALAuth.isApproved = me.status === "approved";
-    } catch (e) {
-      setToken(null);
-      window.ALAuth.currentUser = null;
-      window.ALAuth.userDoc = null;
-      window.ALAuth.isAdmin = false;
-      window.ALAuth.isApproved = false;
-    }
-  }
-
   async function init() {
-    window.ALAuth.db = { collection: function (name) { return makeCollection(name); } };
-    await restoreSession();
-    window.ALAuth.ready = true;
-    updateNavbar(window.ALAuth.currentUser);
-    if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(window.ALAuth.currentUser);
-  }
+    if (!isConfigured) {
+      console.warn("Firebase belum dikonfigurasi. Mode demo.");
+      updateNavbar(null);
+      window.ALAuth.ready = true;
+      if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(null);
+      return;
+    }
+    try {
+      var FB_VERSION = "10.12.2";
+      var BASE = "https://www.gstatic.com/firebasejs/" + FB_VERSION + "/";
+      await loadScript(BASE + "firebase-app-compat.js");
+      await loadScript(BASE + "firebase-auth-compat.js");
+      await loadScript(BASE + "firebase-firestore-compat.js");
+      if (!firebase.apps.length) firebase.initializeApp(cfg);
+      window.ALAuth.db = firebase.firestore();
+      window.ALAuth.auth = firebase.auth();
+      window.ALAuth.ready = true;
+      window.firebaseReady = true;
 
-  async function login(email, password) {
-    var res = await api("/api/auth/login", { method: "POST", body: { email: email, password: password } });
-    setToken(res.token);
-    window.ALAuth.currentUser = { uid: res.user.uid, email: res.user.email };
-    window.ALAuth.userDoc = res.user;
-    window.ALAuth.isAdmin = res.user.role === "admin";
-    window.ALAuth.isApproved = res.user.status === "approved";
-    updateNavbar(window.ALAuth.currentUser);
-    if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(window.ALAuth.currentUser);
-    return res;
-  }
-
-  async function register(name, email, password, phone) {
-    var res = await api("/api/auth/register", { method: "POST", body: { name: name, email: email, password: password, phone: phone } });
-    return res;
-  }
-
-  async function logout() {
-    setToken(null);
-    window.ALAuth.currentUser = null;
-    window.ALAuth.userDoc = null;
-    window.ALAuth.isAdmin = false;
-    window.ALAuth.isApproved = false;
-    updateNavbar(null);
-    if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(null);
-    window.location.href = "index.html";
+      window.ALAuth.auth.onAuthStateChanged(async function (user) {
+        window.ALAuth.currentUser = user;
+        if (user) {
+          try {
+            var snap = await window.ALAuth.db.collection("users").doc(user.uid).get();
+            window.ALAuth.userDoc = snap.exists ? snap.data() : null;
+            window.ALAuth.isAdmin = !!(window.ALAuth.userDoc && window.ALAuth.userDoc.role === "admin");
+            window.ALAuth.isApproved = !!(window.ALAuth.userDoc && window.ALAuth.userDoc.status === "approved");
+          } catch (e) {
+            window.ALAuth.userDoc = null; window.ALAuth.isAdmin = false; window.ALAuth.isApproved = false;
+          }
+        } else {
+          window.ALAuth.userDoc = null; window.ALAuth.isAdmin = false; window.ALAuth.isApproved = false;
+        }
+        updateNavbar(user);
+        if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(user);
+      });
+    } catch (e) {
+      console.error("Gagal init Firebase:", e);
+      window.ALAuth.ready = true;
+    }
   }
 
   function updateNavbar(user) {
@@ -172,12 +82,12 @@
     var li = document.createElement("li");
     li.className = "nav-item nav-auth";
     if (user) {
+      var name = (window.ALAuth.userDoc && (window.ALAuth.userDoc.name || window.ALAuth.userDoc.nama)) || user.email;
       li.innerHTML = '<a class="nav-link" href="#" id="auth-logout">Logout</a>';
       nav.appendChild(li);
       var logoutBtn = document.getElementById("auth-logout");
       if (logoutBtn) logoutBtn.addEventListener("click", function (e) { e.preventDefault(); logout(); });
-      var ud = window.ALAuth.userDoc || {};
-      if (ud.role === "admin") {
+      if (window.ALAuth.isAdmin) {
         var adminLi = document.createElement("li");
         adminLi.className = "nav-item nav-auth";
         var isAdminPage = window.location.pathname.toLowerCase().endsWith("panel-admin.html");
@@ -188,6 +98,27 @@
       li.innerHTML = '<a class="nav-link" href="login.html">Login / Daftar</a>';
       nav.appendChild(li);
     }
+  }
+
+  async function login(email, password) {
+    if (!window.ALAuth.ready) throw new Error("Firebase belum siap.");
+    var cred = await window.ALAuth.auth.signInWithEmailAndPassword(email, password);
+    return cred;
+  }
+
+  async function register(name, email, password, phone) {
+    if (!window.ALAuth.ready) throw new Error("Firebase belum siap.");
+    var cred = await window.ALAuth.auth.createUserWithEmailAndPassword(email, password);
+    await window.ALAuth.db.collection("users").doc(cred.user.uid).set({
+      name: name, email: email, phone: phone || "", role: "user", status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    return cred;
+  }
+
+  async function logout() {
+    if (window.ALAuth.ready && window.ALAuth.auth) await window.ALAuth.auth.signOut();
+    window.location.href = "index.html";
   }
 
   if (document.readyState === "loading") {
