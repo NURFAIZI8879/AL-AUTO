@@ -49,7 +49,6 @@
       if (!firebase.apps.length) firebase.initializeApp(cfg);
       window.ALAuth.db = firebase.firestore();
       window.ALAuth.auth = firebase.auth();
-      window.ALAuth.ready = true;
       window.firebaseReady = true;
 
       window.ALAuth.auth.onAuthStateChanged(async function (user) {
@@ -66,6 +65,7 @@
         } else {
           window.ALAuth.userDoc = null; window.ALAuth.isAdmin = false; window.ALAuth.isApproved = false;
         }
+        if (!window.ALAuth.ready) window.ALAuth.ready = true;
         updateNavbar(user);
         if (typeof window.ALAuth.onAuthChanged === "function") window.ALAuth.onAuthChanged(user);
       });
