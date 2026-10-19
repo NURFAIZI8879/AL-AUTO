@@ -1,0 +1,178 @@
+/* =========================================================
+   AL AUTO — Halaman Beranda (index)
+   Berisi gaya khusus: hero video, band tentang,
+   langkah pendaftaran, dan band ajakan bertindak.
+   ========================================================= */
+
+/* ---------- Hero video ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100vh;
+  min-height: calc(100vh - var(--nav-height));
+  padding: 72px 20px;
+  overflow: hidden;
+  background-color: var(--navy-deep);
+}
+
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 27, 61, 0.78) 0%,
+    rgba(0, 43, 94, 0.62) 55%,
+    rgba(0, 27, 61, 0.85) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 820px;
+}
+
+.hero-logo {
+  display: inline-block;
+  background-color: #ffffff;
+  border-radius: 22px;
+  padding: 18px 30px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+.hero-logo img {
+  height: clamp(56px, 9vw, 96px);
+  width: auto;
+}
+
+.hero-tagline {
+  color: #e6eefc;
+  font-size: clamp(16px, 2.2vw, 20px);
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 26px auto 34px;
+}
+
+.hero-tagline strong {
+  color: #ffffff;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ---------- Band tentang ---------- */
+.about-band {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: clamp(64px, 9vw, 110px) 0;
+  background: linear-gradient(130deg, var(--navy-deep) 0%, var(--navy) 45%, #0055a8 100%);
+}
+
+.about-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.about-inner {
+  position: relative;
+}
+
+.about-band h2 {
+  color: #ffffff;
+  font-size: clamp(24px, 3.6vw, 36px);
+  max-width: 820px;
+  margin: 0 auto 18px;
+}
+
+.about-band p {
+  color: #cddcf3;
+  font-size: 16.5px;
+  max-width: 720px;
+  margin: 0 auto 30px;
+}
+
+/* ---------- Langkah pendaftaran ---------- */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  counter-reset: step;
+}
+
+.step {
+  background-color: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 32px 26px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--speed), box-shadow var(--speed);
+}
+
+.step:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+}
+
+.step-num {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background-color: var(--navy);
+  color: var(--yellow);
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.step h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.step p {
+  color: var(--muted);
+  font-size: 14.5px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 860px) {
+  .steps {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+/* Band ajakan bertindak (.cta-band) tersedia di global.css
+   agar bisa dipakai di semua halaman. */

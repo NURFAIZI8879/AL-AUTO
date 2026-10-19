@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Absensi Peserta — AL AUTO Kursus Mengemudi Palembang</title>
+    <meta name="description" content="Formulir absensi kehadiran peserta kursus mengemudi AL AUTO Palembang. Catat kehadiran Anda dengan mudah melalui WhatsApp.">
+    <meta name="theme-color" content="#002b5e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Absensi Peserta — AL AUTO Kursus Mengemudi Palembang">
+    <meta property="og:description" content="Formulir absensi kehadiran peserta kursus mengemudi AL AUTO.">
+    <link rel="icon" type="image/png" href="assets/img/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="assets/css/global.css" rel="stylesheet">
+    <link href="assets/css/absensi.css" rel="stylesheet">
+</head>
+<body class="absen">
+    <!-- Navigasi -->
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="index.html">
+                <span class="brand-logo"><img src="assets/img/logo.png" alt="Logo AL AUTO"></span>
+                <span class="brand-text">AL AUTO<small>Kursus Mengemudi</small></span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-nav" id="nav-menu">
+                <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="testimoni.html">Testimoni</a></li>
+                <li class="nav-item"><a class="nav-link" href="paket.html">Paket &amp; Harga</a></li>
+                <li class="nav-item"><a class="nav-link active" href="absensi.html">Absensi</a></li>
+                <li class="nav-item daftar"><a class="nav-link" href="pendaftaran.html">Daftar</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- Judul halaman -->
+        <section class="page-head">
+            <div class="container">
+                <span class="hero-eyebrow">Absensi</span>
+                <h1>Absensi Kehadiran Peserta</h1>
+                <p>Silakan isi absensi kehadiran sebelum memulai sesi latihan Anda.</p>
+            </div>
+        </section>
+
+        <!-- Formulir absensi -->
+        <section class="form-section">
+            <div class="container">
+                <div class="absen-wrap fade-in">
+                    <div class="form-card">
+                        <h2>Silakan Isi Absensi Kehadiran Di Bawah Ini</h2>
+                        <p class="form-subtitle">Data absensi akan dikirim kepada instruktur melalui WhatsApp.</p>
+
+                        <form id="absen-form" novalidate>
+                            <div class="form-group">
+                                <label for="id_absen">ID Absen</label>
+                                <input type="text" id="id_absen" name="id_absen" placeholder="Contoh: ABS-2026-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_peserta">ID Peserta</label>
+                                <input type="text" id="id_peserta" name="id_peserta" placeholder="Contoh: PRT-0123" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tanggal_absen">Tanggal Absen</label>
+                                <input type="date" id="tanggal_absen" name="tanggal_absen" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status Kehadiran</label>
+                                <select id="status" name="status" required>
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="Hadir">Hadir</option>
+                                    <option value="Izin">Izin</option>
+                                    <option value="Sakit">Sakit</option>
+                                    <option value="Alfa">Alfa</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-navy btn-block" type="submit">Kirim Absensi</button>
+                            <p class="form-note">Setelah menekan tombol, Anda akan diarahkan ke WhatsApp untuk mengirim absensi.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Tentang AL AUTO</h4>
+                    <p>Kursus Al Auto menyediakan pelatihan mengemudi berkualitas dengan harga terjangkau, dipandu oleh instruktur berpengalaman untuk memastikan proses belajar yang aman dan efektif.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="testimoni.html">Testimoni</a></li>
+                        <li><a href="paket.html">Paket &amp; Harga</a></li>
+                        <li><a href="absensi.html">Absensi</a></li>
+                        <li><a href="pendaftaran.html">Pendaftaran</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Paket Kursus</h4>
+                    <ul>
+                        <li><a href="paket.html">Paket Bisa Manual</a></li>
+                        <li><a href="paket.html">Paket Bisa Matic</a></li>
+                        <li><a href="paket.html">Paket Mahir Manual</a></li>
+                        <li><a href="paket.html">Paket Mahir Matic</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Hubungi Kami</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+                            <a href="https://wa.me/628979480919" target="_blank" rel="noopener">0897-9480-919</a>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Kota Palembang, Sumatera Selatan</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <span>&copy; <span data-year>2026</span> AL AUTO. Seluruh hak cipta dilindungi.</span>
+                <span>Kursus Mengemudi Manual &amp; Matic &mdash; Palembang</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tombol WhatsApp mengambang -->
+    <a class="wa-fab" href="https://wa.me/628979480919?text=Halo%20AL%20AUTO%2C%20saya%20ingin%20bertanya%20tentang%20kursus%20mengemudi." target="_blank" rel="noopener" aria-label="Chat kami di WhatsApp">
+        <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.997 204.1C339 162.2 283.2 139 223.9 139c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+    </a>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/absensi.js"></script>
+</body>
+</html>

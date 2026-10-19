@@ -1,0 +1,9 @@
+/* =========================================================
+   AL AUTO — Halaman Absensi (absen)
+   Berisi gaya khusus: pembungkus formulir absensi.
+   ========================================================= */
+
+.absen-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+}

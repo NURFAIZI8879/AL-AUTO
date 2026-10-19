@@ -1,82 +1,225 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Selamat Datang di AL AUTO</title>
-    <link href="global.css" rel="stylesheet">
-    <link href="index.css" rel="stylesheet">
+    <title>AL AUTO — Kursus Mengemudi Manual &amp; Matic di Palembang</title>
+    <meta name="description" content="Kursus mengemudi AL AUTO di Kota Palembang: pelatihan mobil manual dan matic bersama instruktur berpengalaman, jadwal fleksibel, dan harga terjangkau. Daftar sekarang.">
+    <meta name="theme-color" content="#002b5e">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AL AUTO — Kursus Mengemudi Manual &amp; Matic di Palembang">
+    <meta property="og:description" content="Pelatihan mengemudi manual dan matic di Palembang dengan instruktur berpengalaman dan jadwal yang bisa diatur sendiri.">
+    <link rel="icon" type="image/png" href="assets/img/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="assets/css/global.css" rel="stylesheet">
+    <link href="assets/css/index.css" rel="stylesheet">
 </head>
 
 <body class="index">
-    <section id="header" class="clearfix cd-secondary-nav">
-        <nav class="navbar">
-            <img src="LOGO AL AUTO FINAL.png" alt="Logo" class="navbar-logo">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="team.html">Testimoni</a></li>              
-                <li class="nav-item"><a class="nav-link" href="pricing.html">Paket</a></li>
-                <li class="nav-item"><a class="nav-link" href="absen.html">Absen</a></li>
-                <li class="nav-item daftar"><a class="nav-link" href="contact.html">Daftar</a></li>
+    <!-- Navigasi -->
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="index.html">
+                <span class="brand-logo"><img src="assets/img/logo.png" alt="Logo AL AUTO"></span>
+                <span class="brand-text">AL AUTO<small>Kursus Mengemudi</small></span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-nav" id="nav-menu">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="testimoni.html">Testimoni</a></li>
+                <li class="nav-item"><a class="nav-link" href="paket.html">Paket &amp; Harga</a></li>
+                <li class="nav-item"><a class="nav-link" href="absensi.html">Absensi</a></li>
+                <li class="nav-item daftar"><a class="nav-link" href="pendaftaran.html">Daftar</a></li>
             </ul>
-        </nav>
-    </section>
-    
-    <div class="video-container">
-        <video autoplay muted loop class="background-video">
-            <source src="videoalauto(1).mp4" type="video/mp4">
-        </video>
-        <div class="overlay-content fade-in">
-            <h1>SELAMAT DATANG DI</h1>
-            <img src="LOGO AL AUTO FINAL.png" alt="Welcome to AL Auto Course" class="overlay-image">
         </div>
-    </div>
+    </header>
 
-    <div class="parallax_section">
-        <div class="parallax_bg"></div>
-        <div class="longtext fade-in">
-            <h3>Tempat Belajar Mengemudi Mobil Manual<br>dan Matic di Kota Palembang</h3>
-        </div>
-    </div>
+    <main class="page">
+        <!-- Hero -->
+        <section class="hero">
+            <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/video/hero.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-content fade-in">
+                <span class="hero-eyebrow">Selamat Datang di</span>
+                <div class="hero-logo">
+                    <img src="assets/img/logo.png" alt="AL AUTO — Kursus Mengemudi">
+                </div>
+                <p class="hero-tagline">
+                    Kursus mengemudi mobil <strong>manual &amp; matic</strong> di Kota Palembang —
+                    belajar terarah bersama instruktur berpengalaman, dengan jadwal yang bisa Anda atur sendiri.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="pendaftaran.html">Daftar Sekarang</a>
+                    <a class="btn btn-outline" href="paket.html">Lihat Paket &amp; Harga</a>
+                </div>
+            </div>
+        </section>
 
-    <section id="features">
-        <div class="container">
-            <div class="row">
-                <div class="col-4">
-                    <div class="feature-box">
-                        <i class="fa fa-car fa-4x"></i>
-                        <h3>Berkendara Mudah Di Pahami</h3>
+        <!-- Tentang -->
+        <section class="about-band" id="tentang">
+            <div class="container">
+                <div class="about-inner fade-in">
+                    <h2>Tempat Belajar Mengemudi Mobil Manual dan Matic di Kota Palembang</h2>
+                    <p>
+                        Kursus Al Auto menyediakan pelatihan mengemudi berkualitas dengan harga terjangkau,
+                        dipandu oleh instruktur berpengalaman untuk memastikan proses belajar yang aman dan efektif.
+                    </p>
+                    <a class="btn btn-primary" href="pendaftaran.html">Ambil Kelas Sekarang</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keunggulan -->
+        <section class="section" id="keunggulan">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <span class="eyebrow">Kenapa Memilih Kami</span>
+                    <h2>Belajar Mengemudi Jadi Lebih Mudah</h2>
+                    <p>Beberapa alasan mengapa banyak peserta mempercayakan latihan mengemudinya kepada AL AUTO.</p>
+                </div>
+                <div class="grid grid-3">
+                    <article class="card feature-card fade-in">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 11l1.5-4.2A2 2 0 0 1 8.4 5.5h7.2a2 2 0 0 1 1.9 1.3L19 11"/>
+                                <rect x="3" y="11" width="18" height="6" rx="2"/>
+                                <path d="M7 17v1.5M17 17v1.5M6.5 14h1M16.5 14h1"/>
+                            </svg>
+                        </div>
+                        <h3>Berkendara Mudah Dipahami</h3>
                         <p>Dengan memahami dan menerapkan teknik-teknik berkendara, pengemudi dapat mengurangi risiko kecelakaan dan meningkatkan kenyamanan.</p>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="feature-box">
-                        <i class="fa fa-shield fa-4x"></i>
+                    </article>
+                    <article class="card feature-card fade-in">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 3l7.5 3v5.2c0 4.6-3.1 8.8-7.5 10.3C7.6 20 4.5 15.8 4.5 11.2V6L12 3z"/>
+                                <path d="M9 12l2.2 2.2L15.5 10"/>
+                            </svg>
+                        </div>
                         <h3>Lecet? Tanggung Jawab Kami</h3>
-                        <p>Kami berusaha untuk memberikan rasa aman dan nyaman bagi setiap pelanggan yang mempercayakan kendaraan atau barangnya kepada kami</p>
-                    </div>
+                        <p>Kami berusaha memberikan rasa aman dan nyaman bagi setiap pelanggan yang mempercayakan kendaraannya kepada kami.</p>
+                    </article>
+                    <article class="card feature-card fade-in">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="16" rx="2"/>
+                                <path d="M16 3v4M8 3v4M3 10h18"/>
+                                <path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/>
+                            </svg>
+                        </div>
+                        <h3>Jadwal? Bisa Diatur Sendiri</h3>
+                        <p>Layanan yang menyesuaikan gaya hidup dan kebutuhan Anda, memberikan kenyamanan dan kemudahan di setiap langkah.</p>
+                    </article>
                 </div>
-                <div class="col-4">
-                    <div class="feature-box">
-                        <i class="fa fa-calendar fa-4x"></i>
-                        <h3>Jadwal? Bisa Di Atur Sendiri</h3>
-                        <p>Memberikan layanan yang sesuai dengan gaya hidup dan kebutuhan Anda, memberikan Anda kenyamanan dan kemudahan dalam setiap langkah</p>
+            </div>
+        </section>
+
+        <!-- Cara daftar -->
+        <section class="section section-alt" id="cara-daftar">
+            <div class="container">
+                <div class="section-head fade-in">
+                    <span class="eyebrow">Cara Mendaftar</span>
+                    <h2>Tiga Langkah untuk Mulai Belajar</h2>
+                    <p>Proses pendaftaran cepat dan tanpa ribet, langsung terhubung dengan kami.</p>
+                </div>
+                <ol class="steps">
+                    <li class="step fade-in">
+                        <span class="step-num">1</span>
+                        <h3>Pilih Paket</h3>
+                        <p>Tentukan paket Bisa atau Mahir, dengan mobil manual atau matic, sesuai kebutuhan Anda.</p>
+                    </li>
+                    <li class="step fade-in">
+                        <span class="step-num">2</span>
+                        <h3>Isi Formulir Pendaftaran</h3>
+                        <p>Lengkapi data diri melalui formulir pendaftaran di website, lalu konfirmasi lewat WhatsApp.</p>
+                    </li>
+                    <li class="step fade-in">
+                        <span class="step-num">3</span>
+                        <h3>Mulai Latihan</h3>
+                        <p>Atur jadwal latihan bersama instruktur dan mulai sesi mengemudi Anda.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Ajakan bertindak -->
+        <section class="cta-band">
+            <div class="container">
+                <div class="cta-inner fade-in">
+                    <div class="cta-text">
+                        <h2>Siap Belajar Mengemudi?</h2>
+                        <p>Hubungi kami untuk informasi jadwal, pendaftaran, dan pilihan paket kursus.</p>
+                    </div>
+                    <div class="cta-actions">
+                        <a class="btn btn-primary" href="pendaftaran.html">Daftar Sekarang</a>
+                        <a class="btn btn-outline" href="https://wa.me/628979480919?text=Halo%20AL%20AUTO%2C%20saya%20ingin%20bertanya%20tentang%20kursus%20mengemudi." target="_blank" rel="noopener">Chat WhatsApp</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <section id="footer">
-        <div class="footer_2">
-            <div class="col">
-                <h4>ABOUT</h4>
-                <p>Kursus Al Auto menyediakan pelatihan mengemudi berkualitas dengan harga terjangkau, dipandu oleh instruktur berpengalaman untuk memastikan proses belajar yang aman dan efektif</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Tentang AL AUTO</h4>
+                    <p>Kursus Al Auto menyediakan pelatihan mengemudi berkualitas dengan harga terjangkau, dipandu oleh instruktur berpengalaman untuk memastikan proses belajar yang aman dan efektif.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="testimoni.html">Testimoni</a></li>
+                        <li><a href="paket.html">Paket &amp; Harga</a></li>
+                        <li><a href="absensi.html">Absensi</a></li>
+                        <li><a href="pendaftaran.html">Pendaftaran</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Paket Kursus</h4>
+                    <ul>
+                        <li><a href="paket.html">Paket Bisa Manual</a></li>
+                        <li><a href="paket.html">Paket Bisa Matic</a></li>
+                        <li><a href="paket.html">Paket Mahir Manual</a></li>
+                        <li><a href="paket.html">Paket Mahir Matic</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Hubungi Kami</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+                            <a href="https://wa.me/628979480919" target="_blank" rel="noopener">0897-9480-919</a>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Kota Palembang, Sumatera Selatan</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </section>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <span>&copy; <span data-year>2026</span> AL AUTO. Seluruh hak cipta dilindungi.</span>
+                <span>Kursus Mengemudi Manual &amp; Matic &mdash; Palembang</span>
+            </div>
+        </div>
+    </footer>
 
-    <script src="index.js"></script>
+    <!-- Tombol WhatsApp mengambang -->
+    <a class="wa-fab" href="https://wa.me/628979480919?text=Halo%20AL%20AUTO%2C%20saya%20ingin%20bertanya%20tentang%20kursus%20mengemudi." target="_blank" rel="noopener" aria-label="Chat kami di WhatsApp">
+        <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.997 204.1C339 162.2 283.2 139 223.9 139c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+    </a>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
