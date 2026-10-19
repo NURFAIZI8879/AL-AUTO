@@ -136,9 +136,8 @@
           '<h2>Silakan Isi Absensi Kehadiran</h2>' +
           '<p class="form-subtitle">Data absensi akan tersimpan dan dapat dilihat admin.</p>' +
           '<form id="absen-form" novalidate>' +
-            '<div class="form-group"><label for="id_absen">ID Absen</label><input type="text" id="id_absen" required></div>' +
-            '<div class="form-group"><label for="id_peserta">ID Peserta</label><input type="text" id="id_peserta" required></div>' +
-            '<div class="form-group"><label for="tanggal_absen">Tanggal Absen</label><input type="date" id="tanggal_absen" required></div>' +
+            '<div class="form-group"><label>Pertemuan ke-</label><input type="text" id="pertemuan" readonly></div>' +
+            '<div class="form-group"><label for="tanggal_absen">Tanggal</label><input type="date" id="tanggal_absen" required></div>' +
             '<div class="form-group"><label for="status">Status Kehadiran</label>' +
               '<select id="status" required>' +
                 '<option value="" disabled selected>Pilih Status</option>' +
@@ -147,6 +146,7 @@
                 '<option value="Sakit">Sakit</option>' +
                 '<option value="Alfa">Alfa</option>' +
               '</select></div>' +
+            '<div class="form-group"><label for="catatan">Catatan (opsional)</label><textarea id="catatan" rows="2" placeholder="Contoh: latihan parkir"></textarea></div>' +
             '<button class="btn btn-navy btn-block" type="submit">Kirim Absensi</button>' +
           '</form>' +
           '<div id="absen-history" style="margin-top:24px;"></div>';
@@ -157,16 +157,29 @@
 
       function initAbsenForm(user) {
         var form = document.getElementById("absen-form");
-        var idAbsenInput = document.getElementById("id_absen");
-        var idPesertaInput = document.getElementById("id_peserta");
+        var pertemuanInput = document.getElementById("pertemuan");
         var tanggalInput = document.getElementById("tanggal_absen");
         var statusSelect = document.getElementById("status");
+        var catatanInput = document.getElementById("catatan");
         var historyEl = document.getElementById("absen-history");
 
         var today = new Date();
         var localDate = today.getFullYear() + "-" + String(today.getMonth()+1).padStart(2,"0") + "-" + String(today.getDate()).padStart(2,"0");
         tanggalInput.value = localDate;
         tanggalInput.max = localDate;
+
+        // Hitung pertemuan ke- (berdasarkan jumlah absensi user + 1)
+        async function updatePertemuan() {
+          try {
+            var snap = await window.ALAuth.db.collection("attendance").where("uid", "==", user.uid).get();
+            var count = 0;
+            snap.forEach(function () { count++; });
+            pertemuanInput.value = "Pertemuan ke-" + (count + 1);
+          } catch (e) {
+            pertemuanInput.value = "Pertemuan ke-1";
+          }
+        }
+        updatePertemuan();
 
         function setError(field, message) {
           clearError(field);
@@ -183,8 +196,6 @@
         }
         function validate() {
           var ok = true;
-          if (idAbsenInput.value.trim().length < 2) { setError(idAbsenInput, "Mohon isi ID absen."); ok = false; } else clearError(idAbsenInput);
-          if (idPesertaInput.value.trim().length < 2) { setError(idPesertaInput, "Mohon isi ID peserta."); ok = false; } else clearError(idPesertaInput);
           if (!tanggalInput.value) { setError(tanggalInput, "Mohon pilih tanggal."); ok = false; } else clearError(tanggalInput);
           if (!statusSelect.value) { setError(statusSelect, "Mohon pilih status."); ok = false; } else clearError(statusSelect);
           return ok;
@@ -200,19 +211,35 @@
             if (window.showToast) window.showToast("Firebase belum siap.");
             return;
           }
+          // Cegah absen ganda di tanggal yang sama
+          try {
+            var checkSnap = await window.ALAuth.db.collection("attendance").where("uid", "==", user.uid).get();
+            var already = false;
+            checkSnap.forEach(function (d) { if (d.data().tanggal === tanggalInput.value) already = true; });
+            if (already) {
+              if (window.showToast) window.showToast("Anda sudah absen pada tanggal ini.");
+              return;
+            }
+          } catch (e) {}
+
+          var sessionNum = pertemuanInput.value.replace("Pertemuan ke-", "").trim();
           try {
             await window.ALAuth.db.collection("attendance").add({
               uid: user.uid,
               email: user.email,
-              idAbsen: idAbsenInput.value.trim(),
-              idPeserta: idPesertaInput.value.trim(),
+              idAbsen: "Pertemuan " + sessionNum,
+              idPeserta: user.uid,
               tanggal: tanggalInput.value,
               status: statusSelect.value,
+              note: (catatanInput.value || "").trim(),
               createdAt: new Date().toISOString()
             });
-            if (window.showToast) window.showToast("Absensi berhasil disimpan.");
+            if (window.showToast) window.showToast("Absensi berhasil disimpan (Pertemuan " + sessionNum + ").");
             form.reset();
             tanggalInput.value = localDate;
+            statusSelect.value = "";
+            catatanInput.value = "";
+            updatePertemuan();
             loadHistory();
           } catch (err) {
             if (window.showToast) window.showToast("Gagal menyimpan: " + (err.message || err));
@@ -225,7 +252,6 @@
             var snap = await window.ALAuth.db.collection("attendance")
               .where("uid", "==", user.uid)
               .get();
-            // sort client-side (hindari composite index Firestore)
             var docs = [];
             snap.forEach(function (d) { docs.push(d); });
             docs.sort(function (a, b) {
@@ -242,8 +268,8 @@
               docs.forEach(function (doc) {
                 var d = doc.data();
                 html += "<li style='padding:8px 0; border-bottom:1px dashed var(--line);'>" +
-                  "<strong>" + (d.tanggal || "-") + "</strong> — " + (d.status || "-") +
-                  " (ID Absen: " + (d.idAbsen || "-") + ", ID Peserta: " + (d.idPeserta || "-") + ")" +
+                  "<strong>Pertemuan " + (d.idAbsen || "-") + "</strong> — " + (d.tanggal || "-") + " — " + (d.status || "-") +
+                  (d.note ? " (Catatan: " + d.note + ")" : "") +
                   "</li>";
               });
               html += "</ul>";

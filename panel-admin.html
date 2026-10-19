@@ -97,7 +97,7 @@
                 <h3 style="margin-bottom:12px; color:var(--ad-navy);">Data Absensi</h3>
                 <div style="overflow:auto;">
                     <table class="admin-table">
-                        <thead><tr><th>Tanggal</th><th>User</th><th>ID Absen</th><th>ID Peserta</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <thead><tr><th>Tanggal</th><th>User</th><th>Pertemuan</th><th>Status</th><th>Catatan</th><th>Aksi</th></tr></thead>
                         <tbody id="att-tbody"></tbody>
                     </table>
                 </div>
@@ -232,8 +232,8 @@
               "<td>"+escapeHtml(a.tanggal||"-")+"</td>" +
               "<td>"+escapeHtml(a.email||a.uid||"-")+"</td>" +
               "<td>"+escapeHtml(a.idAbsen||"-")+"</td>" +
-              "<td>"+escapeHtml(a.idPeserta||"-")+"</td>" +
               "<td>"+escapeHtml(a.status||"-")+"</td>" +
+              "<td>"+escapeHtml(a.note||"-")+"</td>" +
               "<td><button class='btn-xs btn-danger' data-act='delatt' data-id='"+a.id+"'>Hapus</button></td>";
             attTbody.appendChild(tr);
           });
