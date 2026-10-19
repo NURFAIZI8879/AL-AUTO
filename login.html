@@ -165,10 +165,20 @@
         });
       }
 
+      async function waitForReady() {
+        if (window.ALAuth && window.ALAuth.ready) return;
+        await new Promise(function (resolve) {
+          var t = setInterval(function () {
+            if (window.ALAuth && window.ALAuth.ready) { clearInterval(t); resolve(); }
+          }, 100);
+        });
+      }
+
       document.getElementById("login-form").addEventListener("submit", async function (e) {
         e.preventDefault();
+        await waitForReady();
         if (!window.ALAuth || !window.ALAuth.ready) {
-          setMsg("Firebase belum dikonfigurasi. Isi firebase-config.js terlebih dahulu.", false);
+          setMsg("Backend belum siap. Pastikan server berjalan.", false);
           return;
         }
         try {
@@ -185,8 +195,9 @@
 
       document.getElementById("register-form").addEventListener("submit", async function (e) {
         e.preventDefault();
+        await waitForReady();
         if (!window.ALAuth || !window.ALAuth.ready) {
-          setMsg("Firebase belum dikonfigurasi. Isi firebase-config.js terlebih dahulu.", false);
+          setMsg("Backend belum siap. Pastikan server berjalan.", false);
           return;
         }
         // Honeypot check

@@ -252,11 +252,7 @@
 
       function evaluate() {
         if (!window.ALAuth) return;
-        if (!window.ALAuth.configured && !window.ALAuth.localMode) {
-          // mode demo: tampilkan form langsung
-          renderForm({ uid: "demo", email: "demo@local" });
-          return;
-        }
+        // Tidak ada mode demo; gunakan alur auth normal.
         if (!window.ALAuth.ready) {
           // tunggu init
           setTimeout(evaluate, 300);
