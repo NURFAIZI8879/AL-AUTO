@@ -257,14 +257,15 @@
     li.className = "nav-item nav-auth";
     if (user) {
       var name = (window.ALAuth.userDoc && (window.ALAuth.userDoc.name || window.ALAuth.userDoc.nama)) || (user.email || "User");
-      li.innerHTML = '<span class="nav-link" style="cursor:default;">' + escapeHtml(name) + '</span> <a class="nav-link" href="#" id="auth-logout">Logout</a>';
+      li.innerHTML = '<span class="nav-link" style="cursor:default; opacity:0.9;">' + escapeHtml(name) + '</span> <a class="nav-link" href="#" id="auth-logout">Logout</a>';
       nav.appendChild(li);
       var logoutBtn = document.getElementById("auth-logout");
       if (logoutBtn) logoutBtn.addEventListener("click", function (e) { e.preventDefault(); logout(); });
       if (window.ALAuth.isAdmin) {
         var adminLi = document.createElement("li");
         adminLi.className = "nav-item nav-auth";
-        adminLi.innerHTML = '<a class="nav-link" href="admin.html">Admin</a>';
+        var isAdminPage = window.location.pathname.toLowerCase().endsWith("admin.html");
+        adminLi.innerHTML = '<a class="nav-link ' + (isAdminPage ? "active" : "") + '" href="admin.html">Admin Panel</a>';
         nav.appendChild(adminLi);
       }
     } else {
