@@ -261,11 +261,11 @@
       nav.appendChild(li);
       var logoutBtn = document.getElementById("auth-logout");
       if (logoutBtn) logoutBtn.addEventListener("click", function (e) { e.preventDefault(); logout(); });
-      if (window.ALAuth.isAdmin) {
+      var isAdminPage = window.location.pathname.toLowerCase().endsWith("panel-admin.html");
+      if (window.ALAuth.isAdmin && !isAdminPage) {
         var adminLi = document.createElement("li");
         adminLi.className = "nav-item nav-auth";
-        var isAdminPage = window.location.pathname.toLowerCase().endsWith("panel-admin.html");
-        adminLi.innerHTML = '<a class="nav-link ' + (isAdminPage ? "active" : "") + '" href="panel-admin.html">Admin Panel</a>';
+        adminLi.innerHTML = '<a class="nav-link" href="panel-admin.html">Admin Panel</a>';
         nav.appendChild(adminLi);
       }
     } else {

@@ -264,7 +264,8 @@
         }
         var user = window.ALAuth.currentUser;
         if (!user) {
-          renderLoginPrompt();
+          // User belum login -> arahkan ke halaman login (panel terpisah)
+          window.location.replace("login.html");
           return;
         }
         if (window.ALAuth.isAdmin) {
