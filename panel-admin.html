@@ -95,12 +95,22 @@
 
             <div class="admin-section" id="section-attendance">
                 <h3 style="margin-bottom:12px; color:var(--ad-navy);">Data Absensi</h3>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">
+                    <input type="text" id="att-search" placeholder="Cari nama / no HP / email..." style="flex:1; min-width:200px; padding:8px 12px; border:1px solid var(--ad-line); border-radius:8px; font-family:inherit; font-size:14px;">
+                    <button class="btn-xs btn-outline" id="att-view-all" type="button" style="padding:8px 14px;">Semua Absensi</button>
+                    <button class="btn-xs btn-primary" id="att-view-summary" type="button" style="padding:8px 14px;">Ringkasan per User</button>
+                </div>
                 <div style="overflow:auto;">
-                    <table class="admin-table">
+                    <table class="admin-table" id="att-table-all">
                         <thead><tr><th>Tanggal</th><th>Nama</th><th>No. HP</th><th>Email</th><th>Pertemuan</th><th>Status</th><th>Catatan</th><th>Aksi</th></tr></thead>
                         <tbody id="att-tbody"></tbody>
                     </table>
+                    <table class="admin-table" id="att-table-summary" style="display:none;">
+                        <thead><tr><th>Nama</th><th>No. HP</th><th>Email</th><th>Jumlah</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alfa</th><th>Terakhir</th><th>Aksi</th></tr></thead>
+                        <tbody id="att-summary-tbody"></tbody>
+                    </table>
                 </div>
+                <div id="att-detail" style="margin-top:16px;"></div>
             </div>
 
             <div class="admin-section" id="section-stats">
@@ -217,16 +227,32 @@
       }
 
       var isLoadingAtt = false;
-      async function loadAttendance() {
-        if (isLoadingAtt) return;
-        if (!await ensureAdmin()) return;
-        isLoadingAtt = true;
+      var allAttendance = [];
+      var currentAttView = "all";
+      var currentAttView = "all";
+
+      function renderAttendance() {
+        var search = (document.getElementById("att-search").value || "").toLowerCase().trim();
         attTbody.innerHTML = "";
-        try {
-          var snap = await window.ALAuth.db.collection("attendance").get();
-          if (snap.empty) { attTbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:var(--ad-muted);'>Belum ada data absensi.</td></tr>"; return; }
-          snap.forEach(function (doc) {
-            var a = doc.data(); a.id = doc.id;
+        var summaryTbody = document.getElementById("att-summary-tbody");
+        summaryTbody.innerHTML = "";
+
+        // filter
+        var filtered = allAttendance.filter(function (a) {
+          if (!search) return true;
+          return (a.name||"").toLowerCase().includes(search) ||
+                 (a.phone||"").toLowerCase().includes(search) ||
+                 (a.email||"").toLowerCase().includes(search);
+        });
+
+        if (currentAttView === "all") {
+          document.getElementById("att-table-all").style.display = "";
+          document.getElementById("att-table-summary").style.display = "none";
+          if (filtered.length === 0) {
+            attTbody.innerHTML = "<tr><td colspan='8' style='text-align:center; color:var(--ad-muted);'>Tidak ada data.</td></tr>";
+            return;
+          }
+          filtered.forEach(function (a) {
             var tr = document.createElement("tr");
             tr.innerHTML =
               "<td>"+escapeHtml(a.tanggal||"-")+"</td>" +
@@ -239,9 +265,102 @@
               "<td><button class='btn-xs btn-danger' data-act='delatt' data-id='"+a.id+"'>Hapus</button></td>";
             attTbody.appendChild(tr);
           });
-        } catch (e) { attTbody.innerHTML = "<tr><td colspan='6'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>"; }
-        finally { isLoadingAtt = false; }
+        } else {
+          document.getElementById("att-table-all").style.display = "none";
+          document.getElementById("att-table-summary").style.display = "";
+          // group by user (uid or email)
+          var groups = {};
+          filtered.forEach(function (a) {
+            var key = a.uid || a.email || a.name;
+            if (!groups[key]) groups[key] = { name:a.name, phone:a.phone, email:a.email, count:0, hadir:0, izin:0, sakit:0, alfa:0, last:"" };
+            groups[key].count++;
+            if (a.status === "Hadir") groups[key].hadir++;
+            else if (a.status === "Izin") groups[key].izin++;
+            else if (a.status === "Sakit") groups[key].sakit++;
+            else if (a.status === "Alfa") groups[key].alfa++;
+            if (!groups[key].last || (a.createdAt||"") > groups[key].last) groups[key].last = a.createdAt || a.tanggal;
+          });
+          var keys = Object.keys(groups);
+          if (keys.length === 0) {
+            summaryTbody.innerHTML = "<tr><td colspan='10' style='text-align:center; color:var(--ad-muted);'>Tidak ada data.</td></tr>";
+            return;
+          }
+          keys.forEach(function (key) {
+            var g = groups[key];
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>"+escapeHtml(g.name||"-")+"</td>" +
+              "<td>"+escapeHtml(g.phone||"-")+"</td>" +
+              "<td>"+escapeHtml(g.email||"-")+"</td>" +
+              "<td><strong>"+g.count+"</strong></td>" +
+              "<td>"+g.hadir+"</td>" +
+              "<td>"+g.izin+"</td>" +
+              "<td>"+g.sakit+"</td>" +
+              "<td>"+g.alfa+"</td>" +
+              "<td>"+escapeHtml((g.last||"-").slice(0,10))+"</td>" +
+              "<td><button class='btn-xs btn-outline' data-act='detail' data-key='"+encodeURIComponent(key)+"'>Detail</button></td>";
+            summaryTbody.appendChild(tr);
+          });
+        }
       }
+
+      async function loadAttendance() {
+        if (isLoadingAtt) return;
+        if (!await ensureAdmin()) return;
+        isLoadingAtt = true;
+        try {
+          var snap = await window.ALAuth.db.collection("attendance").get();
+          allAttendance = [];
+          snap.forEach(function (doc) { var a = doc.data(); a.id = doc.id; allAttendance.push(a); });
+          renderAttendance();
+        } catch (e) {
+          attTbody.innerHTML = "<tr><td colspan='8'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>";
+        } finally { isLoadingAtt = false; }
+      }
+
+      // search
+      document.getElementById("att-search").addEventListener("input", renderAttendance);
+      document.getElementById("att-view-all").addEventListener("click", function () {
+        currentAttView = "all";
+        document.getElementById("att-view-all").className = "btn-xs btn-primary";
+        document.getElementById("att-view-summary").className = "btn-xs btn-outline";
+        renderAttendance();
+      });
+      document.getElementById("att-view-summary").addEventListener("click", function () {
+        currentAttView = "summary";
+        document.getElementById("att-view-summary").className = "btn-xs btn-primary";
+        document.getElementById("att-view-all").className = "btn-xs btn-outline";
+        renderAttendance();
+      });
+
+      // detail modal (reuse user-modal? no, use alert-ish panel)
+      document.getElementById("att-summary-tbody").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-act='detail']");
+        if (!btn) return;
+        var key = decodeURIComponent(btn.getAttribute("data-key"));
+        var rows = allAttendance.filter(function (a) { return (a.uid||a.email||a.name) === key; });
+        var html = "<h3>Detail Absensi</h3><ul style='list-style:none; padding:0;'>";
+        rows.forEach(function (a) {
+          html += "<li style='padding:6px 0; border-bottom:1px dashed var(--ad-line);'>" +
+            (a.idAbsen||"-") + " — " + (a.tanggal||"-") + " — " + (a.status||"-") +
+            (a.note ? " (Catatan: "+a.note+")" : "") +
+            " <button class='btn-xs btn-danger' data-delatt='"+a.id+"' style='margin-left:8px;'>Hapus</button></li>";
+        });
+        html += "</ul>";
+        var detail = document.getElementById("att-detail");
+        detail.innerHTML = html;
+        detail.querySelectorAll("button[data-delatt]").forEach(function (b) {
+          b.addEventListener("click", async function () {
+            if (!confirm("Hapus data absensi ini?")) return;
+            try {
+              await window.ALAuth.db.collection("attendance").doc(b.getAttribute("data-delatt")).delete();
+              await logAudit("DELETE_ATTENDANCE", b.getAttribute("data-delatt"));
+              await loadAttendance();
+              detail.innerHTML = "";
+            } catch (err) { alert("Gagal: " + (err.message || err)); }
+          });
+        });
+      });
 
       usersTbody.addEventListener("click", async function (e) {
         var btn = e.target.closest("button[data-act]");
