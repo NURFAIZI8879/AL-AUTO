@@ -257,7 +257,7 @@
     li.className = "nav-item nav-auth";
     if (user) {
       var name = (window.ALAuth.userDoc && (window.ALAuth.userDoc.name || window.ALAuth.userDoc.nama)) || (user.email || "User");
-      li.innerHTML = '<span class="nav-link" style="cursor:default; opacity:0.9;">' + escapeHtml(name) + '</span> <a class="nav-link" href="#" id="auth-logout">Logout</a>';
+      li.innerHTML = '<a class="nav-link" href="#" id="auth-logout">Logout</a>';
       nav.appendChild(li);
       var logoutBtn = document.getElementById("auth-logout");
       if (logoutBtn) logoutBtn.addEventListener("click", function (e) { e.preventDefault(); logout(); });
