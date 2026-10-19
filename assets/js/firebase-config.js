@@ -1,15 +1,14 @@
 // =========================================================
 // AL AUTO — Firebase Configuration
-// Ganti nilai di bawah dengan config dari Firebase Console.
-// Firebase Console -> Project Settings -> Your apps -> Web app.
 // =========================================================
 window.firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDDrLUoXaqOjQzXZHiKBnRvaEqtL0D6c54",
+  authDomain: "al-auto-absensi.firebaseapp.com",
+  projectId: "al-auto-absensi",
+  storageBucket: "al-auto-absensi.firebasestorage.app",
+  messagingSenderId: "146625366280",
+  appId: "1:146625366280:web:35aa9b32d053d5ed5504bd",
+  measurementId: "G-F0Q8ZXGQ5X"
 };
 // Set true setelah Anda mengisi config di atas.
 window.firebaseReady = false;
