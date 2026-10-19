@@ -97,7 +97,7 @@ Buka: http://localhost:8765
 
 ### Backend (opsional)
 ```powershell
-cd "C:\Users\MRranau\Documents\Default Project\AL-AUTO-API\AlAutoApi"
+cd "AL-AUTO-API/AlAutoApi"
 dotnet run --urls http://localhost:5000
 ```
 
