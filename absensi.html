@@ -252,7 +252,7 @@
 
       function evaluate() {
         if (!window.ALAuth) return;
-        if (!window.ALAuth.configured) {
+        if (!window.ALAuth.configured && !window.ALAuth.localMode) {
           // mode demo: tampilkan form langsung
           renderForm({ uid: "demo", email: "demo@local" });
           return;
