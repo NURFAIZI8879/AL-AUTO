@@ -226,6 +226,8 @@
           try {
             await window.ALAuth.db.collection("attendance").add({
               uid: user.uid,
+              name: (window.ALAuth.userDoc && window.ALAuth.userDoc.name) || user.email,
+              phone: (window.ALAuth.userDoc && window.ALAuth.userDoc.phone) || "",
               email: user.email,
               idAbsen: "Pertemuan " + sessionNum,
               idPeserta: user.uid,

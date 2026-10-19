@@ -97,7 +97,7 @@
                 <h3 style="margin-bottom:12px; color:var(--ad-navy);">Data Absensi</h3>
                 <div style="overflow:auto;">
                     <table class="admin-table">
-                        <thead><tr><th>Tanggal</th><th>User</th><th>Pertemuan</th><th>Status</th><th>Catatan</th><th>Aksi</th></tr></thead>
+                        <thead><tr><th>Tanggal</th><th>Nama</th><th>No. HP</th><th>Email</th><th>Pertemuan</th><th>Status</th><th>Catatan</th><th>Aksi</th></tr></thead>
                         <tbody id="att-tbody"></tbody>
                     </table>
                 </div>
@@ -230,6 +230,8 @@
             var tr = document.createElement("tr");
             tr.innerHTML =
               "<td>"+escapeHtml(a.tanggal||"-")+"</td>" +
+              "<td>"+escapeHtml(a.name||"-")+"</td>" +
+              "<td>"+escapeHtml(a.phone||"-")+"</td>" +
               "<td>"+escapeHtml(a.email||a.uid||"-")+"</td>" +
               "<td>"+escapeHtml(a.idAbsen||"-")+"</td>" +
               "<td>"+escapeHtml(a.status||"-")+"</td>" +
@@ -336,9 +338,9 @@
           var snap = await window.ALAuth.db.collection("attendance").get();
           var rows = [];
           snap.forEach(function (doc) { rows.push(doc.data()); });
-          var csv = "Tanggal,Email,ID Absen,ID Peserta,Status,CreatedAt\n";
+          var csv = "Tanggal,Nama,No HP,Email,Pertemuan,Status,Catatan,CreatedAt\n";
           rows.forEach(function (a) {
-            csv += '"' + (a.tanggal||"") + '","' + (a.email||"") + '","' + (a.idAbsen||"") + '","' + (a.idPeserta||"") + '","' + (a.status||"") + '","' + (a.createdAt||"") + '"\n';
+            csv += '"' + (a.tanggal||"") + '","' + (a.name||"") + '","' + (a.phone||"") + '","' + (a.email||"") + '","' + (a.idAbsen||"") + '","' + (a.status||"") + '","' + (a.note||"") + '","' + (a.createdAt||"") + '"\n';
           });
           var blob = new Blob([csv], { type: "text/csv" });
           var url = URL.createObjectURL(blob);
