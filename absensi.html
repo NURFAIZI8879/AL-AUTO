@@ -208,7 +208,7 @@
               idPeserta: idPesertaInput.value.trim(),
               tanggal: tanggalInput.value,
               status: statusSelect.value,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              createdAt: new Date().toISOString()
             });
             if (window.showToast) window.showToast("Absensi berhasil disimpan.");
             form.reset();

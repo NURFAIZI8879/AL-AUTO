@@ -61,6 +61,9 @@
                                     <input type="password" id="login-password" required>
                                 </div>
                                 <button class="btn btn-navy btn-block" type="submit">Masuk</button>
+                                <p class="form-note" style="margin-top:10px;">
+                                    <a href="#" id="forgot-link">Lupa password?</a>
+                                </p>
                             </form>
                         </div>
 
@@ -84,6 +87,11 @@
                                 <div class="form-group">
                                     <label for="reg-password">Password</label>
                                     <input type="password" id="reg-password" required minlength="6">
+                                </div>
+                                <!-- Honeypot anti-bot (jangan diisi) -->
+                                <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+                                    <label for="reg-website">Website</label>
+                                    <input type="text" id="reg-website" name="website" tabindex="-1" autocomplete="off">
                                 </div>
                                 <button class="btn btn-navy btn-block" type="submit">Daftar</button>
                             </form>
@@ -143,6 +151,20 @@
         msg.style.color = ok ? "#1a7f37" : "#d93025";
       }
 
+      var forgotLink = document.getElementById("forgot-link");
+      if (forgotLink) {
+        forgotLink.addEventListener("click", async function (e) {
+          e.preventDefault();
+          var email = document.getElementById("login-email").value.trim();
+          if (!email) { setMsg("Masukkan email terlebih dahulu.", false); return; }
+          try {
+            var res = await fetch(window.ALAuth.apiBase + "/api/auth/forgot-password", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ email: email }) });
+            var data = await res.json();
+            setMsg(data.message || "Instruksi reset dikirim.", true);
+          } catch (err) { setMsg("Gagal: " + (err.message || err), false); }
+        });
+      }
+
       document.getElementById("login-form").addEventListener("submit", async function (e) {
         e.preventDefault();
         if (!window.ALAuth || !window.ALAuth.ready) {
@@ -165,6 +187,11 @@
         e.preventDefault();
         if (!window.ALAuth || !window.ALAuth.ready) {
           setMsg("Firebase belum dikonfigurasi. Isi firebase-config.js terlebih dahulu.", false);
+          return;
+        }
+        // Honeypot check
+        if (document.getElementById("reg-website").value.trim() !== "") {
+          setMsg("Pendaftaran ditolak (terdeteksi bot).", false);
           return;
         }
         try {
