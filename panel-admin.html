@@ -163,6 +163,17 @@
         return '<span class="status-badge '+cls+'">'+escapeHtml(status||"-")+'</span>';
       }
 
+      async function logAudit(action, target) {
+        try {
+          await window.ALAuth.db.collection("audit").add({
+            actor: (window.ALAuth.userDoc && window.ALAuth.userDoc.email) || "admin",
+            action: action,
+            target: target,
+            createdAt: new Date().toISOString()
+          });
+        } catch (e) { console.warn("Audit log gagal:", e); }
+      }
+
       async function ensureAdmin() {
         if (!window.ALAuth) return false;
         if (!window.ALAuth.ready) {
@@ -236,9 +247,9 @@
         var uid = btn.getAttribute("data-uid");
         var act = btn.getAttribute("data-act");
         try {
-          if (act === "approve") await window.ALAuth.db.collection("users").doc(uid).update({ status: "approved" });
-          else if (act === "reject") await window.ALAuth.db.collection("users").doc(uid).update({ status: "rejected" });
-          else if (act === "delete") { if (!confirm("Hapus user ini?")) return; await window.ALAuth.db.collection("users").doc(uid).delete(); }
+          if (act === "approve") { await window.ALAuth.db.collection("users").doc(uid).update({ status: "approved" }); await logAudit("APPROVE_USER", uid); }
+          else if (act === "reject") { await window.ALAuth.db.collection("users").doc(uid).update({ status: "rejected" }); await logAudit("REJECT_USER", uid); }
+          else if (act === "delete") { if (!confirm("Hapus user ini?")) return; await window.ALAuth.db.collection("users").doc(uid).delete(); await logAudit("DELETE_USER", uid); }
           else if (act === "edit") { await openEditUser(uid); return; }
           await loadUsers();
         } catch (err) { alert("Gagal: " + (err.message || err)); }
@@ -249,7 +260,7 @@
         if (!btn) return;
         var id = btn.getAttribute("data-id");
         if (!confirm("Hapus data absensi ini?")) return;
-        try { await window.ALAuth.db.collection("attendance").doc(id).delete(); await loadAttendance(); }
+        try { await window.ALAuth.db.collection("attendance").doc(id).delete(); await logAudit("DELETE_ATTENDANCE", id); await loadAttendance(); }
         catch (err) { alert("Gagal: " + (err.message || err)); }
       });
 
@@ -293,15 +304,19 @@
       async function loadStats() {
         if (!await ensureAdmin()) return;
         try {
-          var s = await (await fetch(window.ALAuth.apiBase + "/api/stats", { headers: { "Authorization": "Bearer " + localStorage.getItem("alauto_token") } })).json();
+          var usnap = await window.ALAuth.db.collection("users").get();
+          var asnap = await window.ALAuth.db.collection("attendance").get();
+          var users = 0, pending = 0, approved = 0, attendance = 0, hadir = 0;
+          usnap.forEach(function (d) { var u = d.data(); users++; if (u.status === "pending") pending++; if (u.status === "approved") approved++; });
+          asnap.forEach(function (d) { var a = d.data(); attendance++; if (a.status === "Hadir") hadir++; });
           var cards = document.getElementById("stats-cards");
           cards.innerHTML = "";
           var items = [
-            { label: "Total User", val: s.users },
-            { label: "Pending", val: s.pending },
-            { label: "Approved", val: s.approved },
-            { label: "Total Absensi", val: s.attendance },
-            { label: "Hadir", val: s.hadir }
+            { label: "Total User", val: users },
+            { label: "Pending", val: pending },
+            { label: "Approved", val: approved },
+            { label: "Total Absensi", val: attendance },
+            { label: "Hadir", val: hadir }
           ];
           items.forEach(function (it) {
             var d = document.createElement("div");
@@ -318,8 +333,14 @@
 
       document.getElementById("btn-export").addEventListener("click", async function () {
         try {
-          var res = await fetch(window.ALAuth.apiBase + "/api/export/attendance", { headers: { "Authorization": "Bearer " + localStorage.getItem("alauto_token") } });
-          var blob = await res.blob();
+          var snap = await window.ALAuth.db.collection("attendance").get();
+          var rows = [];
+          snap.forEach(function (doc) { rows.push(doc.data()); });
+          var csv = "Tanggal,Email,ID Absen,ID Peserta,Status,CreatedAt\n";
+          rows.forEach(function (a) {
+            csv += '"' + (a.tanggal||"") + '","' + (a.email||"") + '","' + (a.idAbsen||"") + '","' + (a.idPeserta||"") + '","' + (a.status||"") + '","' + (a.createdAt||"") + '"\n';
+          });
+          var blob = new Blob([csv], { type: "text/csv" });
           var url = URL.createObjectURL(blob);
           var a = document.createElement("a");
           a.href = url;
@@ -331,11 +352,14 @@
 
       document.getElementById("btn-audit").addEventListener("click", async function () {
         try {
-          var res = await fetch(window.ALAuth.apiBase + "/api/audit", { headers: { "Authorization": "Bearer " + localStorage.getItem("alauto_token") } });
-          var data = await res.json();
+          var snap = await window.ALAuth.db.collection("audit").get();
+          var rows = [];
+          snap.forEach(function (d) { rows.push(d.data()); });
+          rows.sort(function (a, b) { return (b.createdAt||"") > (a.createdAt||"") ? 1 : -1; });
           var html = "<table class='admin-table'><thead><tr><th>Waktu</th><th>Aktor</th><th>Aksi</th><th>Target</th></tr></thead><tbody>";
-          data.forEach(function (a) {
-            html += "<tr><td>"+a.createdAt+"</td><td>"+a.actor+"</td><td>"+a.action+"</td><td>"+a.target+"</td></tr>";
+          if (rows.length === 0) html += "<tr><td colspan='4' style='text-align:center; color:var(--ad-muted);'>Belum ada audit log.</td></tr>";
+          rows.forEach(function (a) {
+            html += "<tr><td>"+(a.createdAt||"-")+"</td><td>"+(a.actor||"-")+"</td><td>"+(a.action||"-")+"</td><td>"+(a.target||"-")+"</td></tr>";
           });
           html += "</tbody></table>";
           document.getElementById("audit-log").innerHTML = html;
@@ -384,11 +408,13 @@
         try {
           if (uid) {
             await window.ALAuth.db.collection("users").doc(uid).update(data);
+            await logAudit("UPDATE_USER", uid);
           } else {
             var newUid = "u_" + Math.random().toString(36).slice(2, 9);
             data.uid = newUid;
             data.createdAt = new Date().toISOString();
             await window.ALAuth.db.collection("users").doc(newUid).set(data);
+            await logAudit("CREATE_USER", newUid);
           }
           closeModal();
           await loadUsers();

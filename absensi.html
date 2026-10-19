@@ -224,15 +224,22 @@
           try {
             var snap = await window.ALAuth.db.collection("attendance")
               .where("uid", "==", user.uid)
-              .orderBy("createdAt", "desc")
-              .limit(10)
               .get();
+            // sort client-side (hindari composite index Firestore)
+            var docs = [];
+            snap.forEach(function (d) { docs.push(d); });
+            docs.sort(function (a, b) {
+              var da = a.data().createdAt || "";
+              var db = b.data().createdAt || "";
+              return db > da ? 1 : (db < da ? -1 : 0);
+            });
+            docs = docs.slice(0, 10);
             var html = "<h3>Riwayat Absensi</h3>";
-            if (snap.empty) {
+            if (docs.length === 0) {
               html += "<p class='form-subtitle'>Belum ada riwayat absensi.</p>";
             } else {
               html += "<ul style='list-style:none; padding:0;'>";
-              snap.forEach(function (doc) {
+              docs.forEach(function (doc) {
                 var d = doc.data();
                 html += "<li style='padding:8px 0; border-bottom:1px dashed var(--line);'>" +
                   "<strong>" + (d.tanggal || "-") + "</strong> — " + (d.status || "-") +
