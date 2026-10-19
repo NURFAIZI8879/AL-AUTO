@@ -268,7 +268,7 @@
               docs.forEach(function (doc) {
                 var d = doc.data();
                 html += "<li style='padding:8px 0; border-bottom:1px dashed var(--line);'>" +
-                  "<strong>Pertemuan " + (d.idAbsen || "-") + "</strong> — " + (d.tanggal || "-") + " — " + (d.status || "-") +
+                  "<strong>" + (d.idAbsen || "-") + "</strong> — " + (d.tanggal || "-") + " — " + (d.status || "-") +
                   (d.note ? " (Catatan: " + d.note + ")" : "") +
                   "</li>";
               });
