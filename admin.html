@@ -8,6 +8,26 @@
     <link rel="icon" type="image/png" href="assets/img/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="assets/css/global.css" rel="stylesheet">
+    <style>
+      .admin-wrap { max-width: 1100px; margin: 0 auto; }
+      .admin-tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+      .admin-tabs button { flex:1; min-width:140px; }
+      .admin-section { display:none; }
+      .admin-section.active { display:block; }
+      .admin-table { width:100%; border-collapse:collapse; font-size:14px; }
+      .admin-table th, .admin-table td { border:1px solid var(--line); padding:8px; text-align:left; vertical-align:top; }
+      .admin-table th { background:var(--soft); color:var(--navy); }
+      .admin-actions { display:flex; gap:6px; flex-wrap:wrap; }
+      .btn-xs { padding:6px 12px; font-size:12.5px; }
+      .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1500; padding:16px; }
+      .modal-overlay.open { display:flex; }
+      .modal-card { background:#fff; border-radius:var(--radius); padding:24px; max-width:520px; width:100%; max-height:90vh; overflow:auto; }
+      .modal-card h3 { margin-bottom:12px; }
+      .status-badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; }
+      .status-pending { background:#fff3cd; color:#856404; }
+      .status-approved { background:#d4edda; color:#155724; }
+      .status-rejected { background:#f8d7da; color:#721c24; }
+    </style>
 </head>
 <body class="absen">
     <header class="navbar">
@@ -22,7 +42,7 @@
             <ul class="navbar-nav" id="nav-menu">
                 <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
                 <li class="nav-item"><a class="nav-link" href="absensi.html">Absensi</a></li>
-                <li class="nav-item daftar"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
             </ul>
         </div>
     </header>
@@ -31,23 +51,100 @@
         <section class="page-head">
             <div class="container">
                 <span class="hero-eyebrow">Admin</span>
-                <h1>Panel Admin — Verifikasi User</h1>
-                <p>Setujui atau tolak pendaftaran user sebelum fitur absensi aktif.</p>
+                <h1>Panel Admin — Manajemen User &amp; Absensi</h1>
+                <p>Kelola user (CRUD) dan data absensi. Hanya admin yang boleh mengakses.</p>
             </div>
         </section>
 
         <section class="form-section">
-            <div class="container">
-                <div class="absen-wrap fade-in">
-                    <div class="form-card">
-                        <h2>Daftar User Pending</h2>
-                        <p class="form-subtitle" id="admin-status">Memuat...</p>
-                        <div id="admin-list"></div>
+            <div class="container admin-wrap">
+                <p class="form-subtitle" id="admin-status">Memuat...</p>
+
+                <div class="admin-tabs">
+                    <button class="btn btn-navy" id="tab-users" type="button">Manajemen User</button>
+                    <button class="btn btn-outline" id="tab-attendance" type="button" style="color:var(--navy); border-color:var(--line);">Data Absensi</button>
+                </div>
+
+                <!-- Users section -->
+                <div class="admin-section active" id="section-users">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <h2 style="margin:0;">Daftar User</h2>
+                        <button class="btn btn-navy btn-sm" id="btn-add-user" type="button">+ Tambah User</button>
+                    </div>
+                    <div style="overflow:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th><th>Email</th><th>HP</th><th>Role</th><th>Status</th><th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Attendance section -->
+                <div class="admin-section" id="section-attendance">
+                    <h2 style="margin-bottom:12px;">Data Absensi</h2>
+                    <div style="overflow:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th><th>User</th><th>ID Absen</th><th>ID Peserta</th><th>Status</th><th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="att-tbody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- Modal user -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-card">
+            <h3 id="modal-title">Tambah User</h3>
+            <form id="user-form" novalidate>
+                <input type="hidden" id="user-uid">
+                <div class="form-group">
+                    <label for="user-name">Nama</label>
+                    <input type="text" id="user-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-phone">No. HP</label>
+                    <input type="tel" id="user-phone">
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Password</label>
+                    <input type="password" id="user-password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="user-role">Role</label>
+                    <select id="user-role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user-status">Status</label>
+                    <select id="user-status">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+                    <button class="btn btn-outline btn-sm" type="button" id="modal-cancel" style="color:var(--navy); border-color:var(--line);">Batal</button>
+                    <button class="btn btn-navy btn-sm" type="submit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">
@@ -64,90 +161,194 @@
     <script src="assets/js/main.js"></script>
     <script>
     (function () {
-      var listEl = document.getElementById("admin-list");
+      var usersTbody = document.getElementById("users-tbody");
+      var attTbody = document.getElementById("att-tbody");
       var statusEl = document.getElementById("admin-status");
+      var modal = document.getElementById("user-modal");
+      var form = document.getElementById("user-form");
 
-      function renderUser(u) {
-        var div = document.createElement("div");
-        div.style.border = "1px solid var(--line)";
-        div.style.borderRadius = "10px";
-        div.style.padding = "12px";
-        div.style.marginBottom = "10px";
-        div.innerHTML =
-          "<strong>" + escapeHtml(u.name || "-") + "</strong><br>" +
-          "Email: " + escapeHtml(u.email || "-") + "<br>" +
-          "HP: " + escapeHtml(u.phone || "-") + "<br>" +
-          "Status: " + escapeHtml(u.status || "-") +
-          (u.status === "pending"
-            ? '<div style="margin-top:8px; display:flex; gap:8px;">' +
-              '<button class="btn btn-navy btn-sm" data-action="approve" data-uid="' + u.uid + '">Setujui</button>' +
-              '<button class="btn btn-outline btn-sm" data-action="reject" data-uid="' + u.uid + '" style="color:var(--navy); border-color:var(--line);">Tolak</button>' +
-              '</div>'
-            : "");
-        return div;
+      function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+      function badge(status){
+        var cls = status === "approved" ? "status-approved" : (status === "rejected" ? "status-rejected" : "status-pending");
+        return '<span class="status-badge '+cls+'">'+escapeHtml(status||"-")+'</span>';
       }
 
-      function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+      async function ensureAdmin() {
+        if (!window.ALAuth) return false;
+        // tunggu ready
+        if (!window.ALAuth.ready) {
+          await new Promise(function(res){ var t=setInterval(function(){ if(window.ALAuth.ready){ clearInterval(t); res(); } },200); });
+        }
+        if (!window.ALAuth.currentUser) { statusEl.textContent = "Silakan login terlebih dahulu."; return false; }
+        if (!window.ALAuth.isAdmin) { statusEl.textContent = "Akses ditolak. Hanya admin."; return false; }
+        return true;
+      }
 
       async function loadUsers() {
-        if (!window.ALAuth || !window.ALAuth.ready) {
-          statusEl.textContent = "Firebase belum dikonfigurasi.";
-          return;
-        }
-        // tunggu auth state
-        var user = window.ALAuth.currentUser;
-        if (!user) {
-          statusEl.textContent = "Silakan login terlebih dahulu.";
-          return;
-        }
-        if (!window.ALAuth.isAdmin) {
-          statusEl.textContent = "Akses ditolak. Hanya admin yang boleh membuka panel ini.";
-          return;
-        }
-        statusEl.textContent = "Memuat daftar user...";
-        listEl.innerHTML = "";
+        if (!await ensureAdmin()) return;
+        statusEl.textContent = "Memuat user...";
+        usersTbody.innerHTML = "";
         try {
-          var snap = await window.ALAuth.db.collection("users").orderBy("createdAt", "desc").get();
-          if (snap.empty) {
-            statusEl.textContent = "Belum ada user terdaftar.";
-            return;
-          }
+          var snap = await window.ALAuth.db.collection("users").get();
+          if (snap.empty) { statusEl.textContent = "Belum ada user."; return; }
           statusEl.textContent = "Total user: " + snap.size;
           snap.forEach(function (doc) {
-            var data = doc.data();
-            data.uid = doc.id;
-            listEl.appendChild(renderUser(data));
+            var u = doc.data(); u.uid = doc.id;
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>"+escapeHtml(u.name||"-")+"</td>" +
+              "<td>"+escapeHtml(u.email||"-")+"</td>" +
+              "<td>"+escapeHtml(u.phone||"-")+"</td>" +
+              "<td>"+escapeHtml(u.role||"-")+"</td>" +
+              "<td>"+badge(u.status)+"</td>" +
+              "<td><div class='admin-actions'>" +
+                (u.status !== "approved" ? '<button class="btn btn-navy btn-xs" data-act="approve" data-uid="'+u.uid+'">Setujui</button>' : '') +
+                (u.status !== "rejected" ? '<button class="btn btn-outline btn-xs" data-act="reject" data-uid="'+u.uid+'" style="color:var(--navy); border-color:var(--line);">Tolak</button>' : '') +
+                '<button class="btn btn-outline btn-xs" data-act="edit" data-uid="'+u.uid+'" style="color:var(--navy); border-color:var(--line);">Edit</button>' +
+                '<button class="btn btn-outline btn-xs" data-act="delete" data-uid="'+u.uid+'" style="color:#d93025; border-color:#f3b0b3;">Hapus</button>' +
+              "</div></td>";
+            usersTbody.appendChild(tr);
           });
         } catch (e) {
-          statusEl.textContent = "Gagal memuat: " + (e.message || e);
+          statusEl.textContent = "Gagal memuat user: " + (e.message || e);
         }
       }
 
-      document.addEventListener("click", async function (e) {
-        var btn = e.target.closest("button[data-action]");
+      async function loadAttendance() {
+        if (!await ensureAdmin()) return;
+        attTbody.innerHTML = "";
+        try {
+          var snap = await window.ALAuth.db.collection("attendance").get();
+          if (snap.empty) { attTbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:var(--muted);'>Belum ada data absensi.</td></tr>"; return; }
+          snap.forEach(function (doc) {
+            var a = doc.data(); a.id = doc.id;
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>"+escapeHtml(a.tanggal||"-")+"</td>" +
+              "<td>"+escapeHtml(a.email||a.uid||"-")+"</td>" +
+              "<td>"+escapeHtml(a.idAbsen||"-")+"</td>" +
+              "<td>"+escapeHtml(a.idPeserta||"-")+"</td>" +
+              "<td>"+escapeHtml(a.status||"-")+"</td>" +
+              "<td><button class='btn btn-outline btn-xs' data-act='delatt' data-id='"+a.id+"' style='color:#d93025; border-color:#f3b0b3;'>Hapus</button></td>";
+            attTbody.appendChild(tr);
+          });
+        } catch (e) {
+          attTbody.innerHTML = "<tr><td colspan='6'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>";
+        }
+      }
+
+      // Event delegation
+      usersTbody.addEventListener("click", async function (e) {
+        var btn = e.target.closest("button[data-act]");
         if (!btn) return;
         var uid = btn.getAttribute("data-uid");
-        var action = btn.getAttribute("data-action");
-        if (!window.ALAuth || !window.ALAuth.ready) return;
+        var act = btn.getAttribute("data-act");
         try {
-          var newStatus = action === "approve" ? "approved" : "rejected";
-          await window.ALAuth.db.collection("users").doc(uid).update({ status: newStatus });
+          if (act === "approve") {
+            await window.ALAuth.db.collection("users").doc(uid).update({ status: "approved" });
+          } else if (act === "reject") {
+            await window.ALAuth.db.collection("users").doc(uid).update({ status: "rejected" });
+          } else if (act === "delete") {
+            if (!confirm("Hapus user ini?")) return;
+            await window.ALAuth.db.collection("users").doc(uid).delete();
+          } else if (act === "edit") {
+            await openEditUser(uid);
+            return;
+          }
           await loadUsers();
-        } catch (err) {
-          alert("Gagal: " + (err.message || err));
-        }
+        } catch (err) { alert("Gagal: " + (err.message || err)); }
       });
 
-      // tunggu auth init
-      var check = setInterval(function () {
-        if (window.ALAuth && window.ALAuth.ready !== undefined && (window.ALAuth.ready || !window.ALAuth.configured)) {
-          clearInterval(check);
-          // kalau auth state belum siap, tunggu sedikit
-          setTimeout(loadUsers, 500);
-        }
-      }, 200);
+      attTbody.addEventListener("click", async function (e) {
+        var btn = e.target.closest("button[data-act='delatt']");
+        if (!btn) return;
+        var id = btn.getAttribute("data-id");
+        if (!confirm("Hapus data absensi ini?")) return;
+        try {
+          await window.ALAuth.db.collection("attendance").doc(id).delete();
+          await loadAttendance();
+        } catch (err) { alert("Gagal: " + (err.message || err)); }
+      });
 
-      window.ALAuth.onAuthChanged = function () { setTimeout(loadUsers, 300); };
+      // Tabs
+      document.getElementById("tab-users").addEventListener("click", function () {
+        document.getElementById("section-users").classList.add("active");
+        document.getElementById("section-attendance").classList.remove("active");
+        this.className = "btn btn-navy";
+        document.getElementById("tab-attendance").className = "btn btn-outline";
+        document.getElementById("tab-attendance").style.color = "var(--navy)";
+        document.getElementById("tab-attendance").style.borderColor = "var(--line)";
+        loadUsers();
+      });
+      document.getElementById("tab-attendance").addEventListener("click", function () {
+        document.getElementById("section-attendance").classList.add("active");
+        document.getElementById("section-users").classList.remove("active");
+        document.getElementById("tab-users").className = "btn btn-outline";
+        document.getElementById("tab-users").style.color = "var(--navy)";
+        document.getElementById("tab-users").style.borderColor = "var(--line)";
+        this.className = "btn btn-navy";
+        loadAttendance();
+      });
+
+      // Modal
+      function openModal(data) {
+        document.getElementById("modal-title").textContent = data ? "Edit User" : "Tambah User";
+        document.getElementById("user-uid").value = data ? data.uid : "";
+        document.getElementById("user-name").value = data ? (data.name || "") : "";
+        document.getElementById("user-email").value = data ? (data.email || "") : "";
+        document.getElementById("user-phone").value = data ? (data.phone || "") : "";
+        document.getElementById("user-password").value = data ? (data.password || "") : "";
+        document.getElementById("user-role").value = data ? (data.role || "user") : "user";
+        document.getElementById("user-status").value = data ? (data.status || "pending") : "pending";
+        modal.classList.add("open");
+      }
+      function closeModal() { modal.classList.remove("open"); form.reset(); }
+      document.getElementById("modal-cancel").addEventListener("click", closeModal);
+      modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+
+      async function openEditUser(uid) {
+        try {
+          var snap = await window.ALAuth.db.collection("users").doc(uid).get();
+          if (!snap.exists) { alert("User tidak ditemukan."); return; }
+          var data = snap.data(); data.uid = uid;
+          openModal(data);
+        } catch (e) { alert("Gagal: " + (e.message || e)); }
+      }
+
+      document.getElementById("btn-add-user").addEventListener("click", function () { openModal(null); });
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var uid = document.getElementById("user-uid").value;
+        var data = {
+          name: document.getElementById("user-name").value.trim(),
+          email: document.getElementById("user-email").value.trim(),
+          phone: document.getElementById("user-phone").value.trim(),
+          password: document.getElementById("user-password").value,
+          role: document.getElementById("user-role").value,
+          status: document.getElementById("user-status").value
+        };
+        try {
+          if (uid) {
+            await window.ALAuth.db.collection("users").doc(uid).update(data);
+          } else {
+            // create new
+            var newUid = "u_" + Math.random().toString(36).slice(2, 9);
+            data.uid = newUid;
+            data.createdAt = new Date().toISOString();
+            await window.ALAuth.db.collection("users").doc(newUid).set(data);
+          }
+          closeModal();
+          await loadUsers();
+        } catch (err) { alert("Gagal menyimpan: " + (err.message || err)); }
+      });
+
+      // init
+      (async function () {
+        if (!await ensureAdmin()) return;
+        await loadUsers();
+      })();
     })();
     </script>
 </body>

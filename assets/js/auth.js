@@ -125,6 +125,15 @@
               save(users);
             }
             return Promise.resolve();
+          },
+          delete: function () {
+            var users = store();
+            var idx = users.findIndex(function (u) { return (u.uid || u.id) === id; });
+            if (idx >= 0) {
+              users.splice(idx, 1);
+              save(users);
+            }
+            return Promise.resolve();
           }
         };
       },
