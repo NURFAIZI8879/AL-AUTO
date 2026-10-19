@@ -4,161 +4,142 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Panel Admin — AL AUTO</title>
-    <meta name="theme-color" content="#002b5e">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0f172a">
     <link rel="icon" type="image/png" href="assets/img/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="assets/css/global.css" rel="stylesheet">
     <style>
-      .admin-wrap { max-width: 1100px; margin: 0 auto; }
-      .admin-tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
-      .admin-tabs button { flex:1; min-width:140px; }
+      :root {
+        --ad-navy: #0f172a;
+        --ad-blue: #2563eb;
+        --ad-bg: #f1f5f9;
+        --ad-card: #ffffff;
+        --ad-line: #e2e8f0;
+        --ad-ink: #1e293b;
+        --ad-muted: #64748b;
+        --ad-radius: 12px;
+      }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:"Poppins",system-ui,sans-serif; background:var(--ad-bg); color:var(--ad-ink); min-height:100vh; display:flex; flex-direction:column; }
+      .admin-topbar { background:var(--ad-navy); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; box-shadow:0 2px 12px rgba(0,0,0,0.25); }
+      .admin-brand { display:flex; align-items:center; gap:12px; font-weight:700; font-size:18px; letter-spacing:0.04em; }
+      .admin-brand img { height:30px; background:#fff; border-radius:6px; padding:4px 6px; }
+      .admin-brand small { display:block; font-size:10px; font-weight:500; color:#94a3b8; letter-spacing:0.16em; text-transform:uppercase; }
+      .admin-topbar .btn-logout { background:#ef4444; color:#fff; border:none; padding:8px 18px; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit; }
+      .admin-topbar .btn-logout:hover { background:#dc2626; }
+      .admin-main { flex:1; padding:24px; max-width:1200px; width:100%; margin:0 auto; }
+      .admin-card { background:var(--ad-card); border:1px solid var(--ad-line); border-radius:var(--ad-radius); padding:20px; box-shadow:0 4px 14px rgba(15,23,42,0.06); margin-bottom:20px; }
+      .admin-card h2 { margin:0 0 4px; font-size:20px; color:var(--ad-navy); }
+      .admin-card .sub { color:var(--ad-muted); font-size:14px; margin-bottom:16px; }
+      .admin-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+      .admin-tabs button { padding:8px 18px; border:1px solid var(--ad-line); background:#fff; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit; color:var(--ad-ink); }
+      .admin-tabs button.active { background:var(--ad-blue); color:#fff; border-color:var(--ad-blue); }
       .admin-section { display:none; }
       .admin-section.active { display:block; }
-      .admin-table { width:100%; border-collapse:collapse; font-size:14px; }
-      .admin-table th, .admin-table td { border:1px solid var(--line); padding:8px; text-align:left; vertical-align:top; }
-      .admin-table th { background:var(--soft); color:var(--navy); }
+      .admin-table { width:100%; border-collapse:collapse; font-size:13.5px; }
+      .admin-table th, .admin-table td { border:1px solid var(--ad-line); padding:8px 10px; text-align:left; vertical-align:top; }
+      .admin-table th { background:#f8fafc; color:var(--ad-navy); font-weight:600; }
+      .admin-table tr:hover td { background:#f8fafc; }
       .admin-actions { display:flex; gap:6px; flex-wrap:wrap; }
-      .btn-xs { padding:6px 12px; font-size:12.5px; }
-      .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1500; padding:16px; }
+      .btn-xs { padding:5px 11px; font-size:12px; border-radius:6px; border:none; cursor:pointer; font-family:inherit; font-weight:600; }
+      .btn-primary { background:var(--ad-blue); color:#fff; }
+      .btn-danger { background:#ef4444; color:#fff; }
+      .btn-outline { background:#fff; color:var(--ad-ink); border:1px solid var(--ad-line); }
+      .status-badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11.5px; font-weight:600; }
+      .status-pending { background:#fef3c7; color:#92400e; }
+      .status-approved { background:#dcfce7; color:#166534; }
+      .status-rejected { background:#fee2e2; color:#991b1b; }
+      .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.6); display:none; align-items:center; justify-content:center; z-index:1500; padding:16px; }
       .modal-overlay.open { display:flex; }
-      .modal-card { background:#fff; border-radius:var(--radius); padding:24px; max-width:520px; width:100%; max-height:90vh; overflow:auto; }
-      .modal-card h3 { margin-bottom:12px; }
-      .status-badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; }
-      .status-pending { background:#fff3cd; color:#856404; }
-      .status-approved { background:#d4edda; color:#155724; }
-      .status-rejected { background:#f8d7da; color:#721c24; }
+      .modal-card { background:#fff; border-radius:var(--ad-radius); padding:24px; max-width:520px; width:100%; max-height:90vh; overflow:auto; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+      .modal-card h3 { margin:0 0 12px; color:var(--ad-navy); }
+      .form-group { margin-bottom:12px; }
+      .form-group label { display:block; font-size:13px; font-weight:600; color:var(--ad-navy); margin-bottom:4px; }
+      .form-group input, .form-group select { width:100%; padding:9px 11px; border:1px solid var(--ad-line); border-radius:8px; font-family:inherit; font-size:14px; }
+      .access-denied { text-align:center; padding:60px 20px; color:var(--ad-muted); }
+      .access-denied h2 { color:#ef4444; }
     </style>
 </head>
-<body class="absen">
-    <header class="navbar">
-        <div class="navbar-inner">
-            <a class="brand" href="index.html">
-                <span class="brand-logo"><img src="assets/img/logo.png" alt="Logo AL AUTO"></span>
-                <span class="brand-text">AL AUTO<small>Kursus Mengemudi</small></span>
-            </a>
-            <button class="nav-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="navbar-nav" id="nav-menu">
-                <!-- Hanya Logout yang diinjeksi oleh auth.js (panel terpisah) -->
-            </ul>
+<body>
+    <div class="admin-topbar">
+        <div class="admin-brand">
+            <img src="assets/img/logo.png" alt="Logo">
+            <div>AL AUTO<small>Admin Console</small></div>
         </div>
-    </header>
+        <button class="btn-logout" id="admin-logout" type="button">Logout</button>
+    </div>
 
-    <main class="page">
-        <section class="page-head">
-            <div class="container">
-                <span class="hero-eyebrow">Admin</span>
-                <h1>Panel Admin — Manajemen User &amp; Absensi</h1>
-                <p>Kelola user (CRUD) dan data absensi. Hanya admin yang boleh mengakses.</p>
+    <main class="admin-main" id="admin-main">
+        <div class="admin-card">
+            <h2>Panel Admin</h2>
+            <p class="sub" id="admin-status">Memuat...</p>
+
+            <div class="admin-tabs">
+                <button class="active" id="tab-users" type="button">Manajemen User</button>
+                <button id="tab-attendance" type="button">Data Absensi</button>
             </div>
-        </section>
 
-        <section class="form-section">
-            <div class="container admin-wrap">
-                <p class="form-subtitle" id="admin-status">Memuat...</p>
-
-                <div class="admin-tabs">
-                    <button class="btn btn-navy" id="tab-users" type="button">Manajemen User</button>
-                    <button class="btn btn-outline" id="tab-attendance" type="button" style="color:var(--navy); border-color:var(--line);">Data Absensi</button>
+            <div class="admin-section active" id="section-users">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                    <h3 style="margin:0; color:var(--ad-navy);">Daftar User</h3>
+                    <button class="btn-xs btn-primary" id="btn-add-user" type="button" style="padding:8px 16px; font-size:13px;">+ Tambah User</button>
                 </div>
-
-                <!-- Users section -->
-                <div class="admin-section active" id="section-users">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-                        <h2 style="margin:0;">Daftar User</h2>
-                        <button class="btn btn-navy btn-sm" id="btn-add-user" type="button">+ Tambah User</button>
-                    </div>
-                    <div style="overflow:auto;">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th><th>Email</th><th>HP</th><th>Role</th><th>Status</th><th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Attendance section -->
-                <div class="admin-section" id="section-attendance">
-                    <h2 style="margin-bottom:12px;">Data Absensi</h2>
-                    <div style="overflow:auto;">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Tanggal</th><th>User</th><th>ID Absen</th><th>ID Peserta</th><th>Status</th><th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="att-tbody"></tbody>
-                        </table>
-                    </div>
+                <div style="overflow:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Nama</th><th>Email</th><th>HP</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody id="users-tbody"></tbody>
+                    </table>
                 </div>
             </div>
-        </section>
+
+            <div class="admin-section" id="section-attendance">
+                <h3 style="margin-bottom:12px; color:var(--ad-navy);">Data Absensi</h3>
+                <div style="overflow:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Tanggal</th><th>User</th><th>ID Absen</th><th>ID Peserta</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody id="att-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Modal user -->
     <div class="modal-overlay" id="user-modal">
         <div class="modal-card">
             <h3 id="modal-title">Tambah User</h3>
             <form id="user-form" novalidate>
                 <input type="hidden" id="user-uid">
-                <div class="form-group">
-                    <label for="user-name">Nama</label>
-                    <input type="text" id="user-name" required>
+                <div class="form-group"><label for="user-name">Nama</label><input type="text" id="user-name" required></div>
+                <div class="form-group"><label for="user-email">Email</label><input type="email" id="user-email" required></div>
+                <div class="form-group"><label for="user-phone">No. HP</label><input type="tel" id="user-phone"></div>
+                <div class="form-group"><label for="user-password">Password</label><input type="password" id="user-password" required minlength="6"></div>
+                <div class="form-group"><label for="user-role">Role</label>
+                    <select id="user-role"><option value="user">User</option><option value="admin">Admin</option></select>
                 </div>
-                <div class="form-group">
-                    <label for="user-email">Email</label>
-                    <input type="email" id="user-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-phone">No. HP</label>
-                    <input type="tel" id="user-phone">
-                </div>
-                <div class="form-group">
-                    <label for="user-password">Password</label>
-                    <input type="password" id="user-password" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="user-role">Role</label>
-                    <select id="user-role">
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="user-status">Status</label>
-                    <select id="user-status">
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
+                <div class="form-group"><label for="user-status">Status</label>
+                    <select id="user-status"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
                 </div>
                 <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
-                    <button class="btn btn-outline btn-sm" type="button" id="modal-cancel" style="color:var(--navy); border-color:var(--line);">Batal</button>
-                    <button class="btn btn-navy btn-sm" type="submit">Simpan</button>
+                    <button class="btn-xs btn-outline" type="button" id="modal-cancel">Batal</button>
+                    <button class="btn-xs btn-primary" type="submit">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <div class="container footer-bottom-inner">
-                    <span>&copy; <span data-year>2026</span> AL AUTO. Seluruh hak cipta dilindungi.</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/auth.js"></script>
-    <script src="assets/js/main.js"></script>
     <script>
     (function () {
+      // Override auth.js navbar injection: admin panel has its own topbar, so remove injected nav items
+      var _origUpdate = window.ALAuth && window.ALAuth.updateNavbar;
+      // We'll just hide any .nav-auth after init
+      function cleanNav() {
+        document.querySelectorAll(".nav-auth").forEach(function (el) { el.remove(); });
+        var nav = document.getElementById("nav-menu");
+        if (nav) nav.style.display = "none";
+      }
+
       var usersTbody = document.getElementById("users-tbody");
       var attTbody = document.getElementById("att-tbody");
       var statusEl = document.getElementById("admin-status");
@@ -166,7 +147,6 @@
       var form = document.getElementById("user-form");
 
       function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
-
       function badge(status){
         var cls = status === "approved" ? "status-approved" : (status === "rejected" ? "status-rejected" : "status-pending");
         return '<span class="status-badge '+cls+'">'+escapeHtml(status||"-")+'</span>';
@@ -177,16 +157,8 @@
         if (!window.ALAuth.ready) {
           await new Promise(function(res){ var t=setInterval(function(){ if(window.ALAuth.ready){ clearInterval(t); res(); } },200); });
         }
-        if (!window.ALAuth.currentUser) {
-          // Tidak login -> arahkan ke halaman login (panel admin tersembunyi)
-          window.location.replace("login.html");
-          return false;
-        }
-        if (!window.ALAuth.isAdmin) {
-          // Bukan admin -> arahkan ke beranda (tanpa menampilkan panel)
-          window.location.replace("index.html");
-          return false;
-        }
+        if (!window.ALAuth.currentUser) { window.location.replace("login.html"); return false; }
+        if (!window.ALAuth.isAdmin) { window.location.replace("index.html"); return false; }
         return true;
       }
 
@@ -208,16 +180,14 @@
               "<td>"+escapeHtml(u.role||"-")+"</td>" +
               "<td>"+badge(u.status)+"</td>" +
               "<td><div class='admin-actions'>" +
-                (u.status !== "approved" ? '<button class="btn btn-navy btn-xs" data-act="approve" data-uid="'+u.uid+'">Setujui</button>' : '') +
-                (u.status !== "rejected" ? '<button class="btn btn-outline btn-xs" data-act="reject" data-uid="'+u.uid+'" style="color:var(--navy); border-color:var(--line);">Tolak</button>' : '') +
-                '<button class="btn btn-outline btn-xs" data-act="edit" data-uid="'+u.uid+'" style="color:var(--navy); border-color:var(--line);">Edit</button>' +
-                '<button class="btn btn-outline btn-xs" data-act="delete" data-uid="'+u.uid+'" style="color:#d93025; border-color:#f3b0b3;">Hapus</button>' +
+                (u.status !== "approved" ? '<button class="btn-xs btn-primary" data-act="approve" data-uid="'+u.uid+'">Setujui</button>' : '') +
+                (u.status !== "rejected" ? '<button class="btn-xs btn-outline" data-act="reject" data-uid="'+u.uid+'">Tolak</button>' : '') +
+                '<button class="btn-xs btn-outline" data-act="edit" data-uid="'+u.uid+'">Edit</button>' +
+                '<button class="btn-xs btn-danger" data-act="delete" data-uid="'+u.uid+'">Hapus</button>' +
               "</div></td>";
             usersTbody.appendChild(tr);
           });
-        } catch (e) {
-          statusEl.textContent = "Gagal memuat user: " + (e.message || e);
-        }
+        } catch (e) { statusEl.textContent = "Gagal memuat user: " + (e.message || e); }
       }
 
       async function loadAttendance() {
@@ -225,7 +195,7 @@
         attTbody.innerHTML = "";
         try {
           var snap = await window.ALAuth.db.collection("attendance").get();
-          if (snap.empty) { attTbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:var(--muted);'>Belum ada data absensi.</td></tr>"; return; }
+          if (snap.empty) { attTbody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:var(--ad-muted);'>Belum ada data absensi.</td></tr>"; return; }
           snap.forEach(function (doc) {
             var a = doc.data(); a.id = doc.id;
             var tr = document.createElement("tr");
@@ -235,32 +205,22 @@
               "<td>"+escapeHtml(a.idAbsen||"-")+"</td>" +
               "<td>"+escapeHtml(a.idPeserta||"-")+"</td>" +
               "<td>"+escapeHtml(a.status||"-")+"</td>" +
-              "<td><button class='btn btn-outline btn-xs' data-act='delatt' data-id='"+a.id+"' style='color:#d93025; border-color:#f3b0b3;'>Hapus</button></td>";
+              "<td><button class='btn-xs btn-danger' data-act='delatt' data-id='"+a.id+"'>Hapus</button></td>";
             attTbody.appendChild(tr);
           });
-        } catch (e) {
-          attTbody.innerHTML = "<tr><td colspan='6'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>";
-        }
+        } catch (e) { attTbody.innerHTML = "<tr><td colspan='6'>Gagal memuat: "+escapeHtml(e.message||e)+"</td></tr>"; }
       }
 
-      // Event delegation
       usersTbody.addEventListener("click", async function (e) {
         var btn = e.target.closest("button[data-act]");
         if (!btn) return;
         var uid = btn.getAttribute("data-uid");
         var act = btn.getAttribute("data-act");
         try {
-          if (act === "approve") {
-            await window.ALAuth.db.collection("users").doc(uid).update({ status: "approved" });
-          } else if (act === "reject") {
-            await window.ALAuth.db.collection("users").doc(uid).update({ status: "rejected" });
-          } else if (act === "delete") {
-            if (!confirm("Hapus user ini?")) return;
-            await window.ALAuth.db.collection("users").doc(uid).delete();
-          } else if (act === "edit") {
-            await openEditUser(uid);
-            return;
-          }
+          if (act === "approve") await window.ALAuth.db.collection("users").doc(uid).update({ status: "approved" });
+          else if (act === "reject") await window.ALAuth.db.collection("users").doc(uid).update({ status: "rejected" });
+          else if (act === "delete") { if (!confirm("Hapus user ini?")) return; await window.ALAuth.db.collection("users").doc(uid).delete(); }
+          else if (act === "edit") { await openEditUser(uid); return; }
           await loadUsers();
         } catch (err) { alert("Gagal: " + (err.message || err)); }
       });
@@ -270,33 +230,27 @@
         if (!btn) return;
         var id = btn.getAttribute("data-id");
         if (!confirm("Hapus data absensi ini?")) return;
-        try {
-          await window.ALAuth.db.collection("attendance").doc(id).delete();
-          await loadAttendance();
-        } catch (err) { alert("Gagal: " + (err.message || err)); }
+        try { await window.ALAuth.db.collection("attendance").doc(id).delete(); await loadAttendance(); }
+        catch (err) { alert("Gagal: " + (err.message || err)); }
       });
 
-      // Tabs
       document.getElementById("tab-users").addEventListener("click", function () {
         document.getElementById("section-users").classList.add("active");
         document.getElementById("section-attendance").classList.remove("active");
-        this.className = "btn btn-navy";
-        document.getElementById("tab-attendance").className = "btn btn-outline";
-        document.getElementById("tab-attendance").style.color = "var(--navy)";
-        document.getElementById("tab-attendance").style.borderColor = "var(--line)";
+        this.classList.add("active");
+        document.getElementById("tab-attendance").classList.remove("active");
         loadUsers();
       });
       document.getElementById("tab-attendance").addEventListener("click", function () {
         document.getElementById("section-attendance").classList.add("active");
         document.getElementById("section-users").classList.remove("active");
-        document.getElementById("tab-users").className = "btn btn-outline";
-        document.getElementById("tab-users").style.color = "var(--navy)";
-        document.getElementById("tab-users").style.borderColor = "var(--line)";
-        this.className = "btn btn-navy";
+        document.getElementById("tab-users").classList.remove("active");
+        this.classList.add("active");
         loadAttendance();
       });
 
-      // Modal
+      var modal = document.getElementById("user-modal");
+      var form = document.getElementById("user-form");
       function openModal(data) {
         document.getElementById("modal-title").textContent = data ? "Edit User" : "Tambah User";
         document.getElementById("user-uid").value = data ? data.uid : "";
@@ -338,7 +292,6 @@
           if (uid) {
             await window.ALAuth.db.collection("users").doc(uid).update(data);
           } else {
-            // create new
             var newUid = "u_" + Math.random().toString(36).slice(2, 9);
             data.uid = newUid;
             data.createdAt = new Date().toISOString();
@@ -349,10 +302,21 @@
         } catch (err) { alert("Gagal menyimpan: " + (err.message || err)); }
       });
 
+      document.getElementById("admin-logout").addEventListener("click", function () {
+        if (window.ALAuth && window.ALAuth.logout) window.ALAuth.logout();
+        else window.location.href = "index.html";
+      });
+
       // init
       (async function () {
+        // tunggu auth
+        if (!window.ALAuth.ready) {
+          await new Promise(function(res){ var t=setInterval(function(){ if(window.ALAuth.ready){ clearInterval(t); res(); } },200); });
+        }
+        cleanNav();
         if (!await ensureAdmin()) return;
         await loadUsers();
+        window.ALAuth.onAuthChanged = function () { loadUsers(); };
       })();
     })();
     </script>
