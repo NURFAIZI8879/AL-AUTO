@@ -354,7 +354,7 @@
         try {
           var snap = await window.ALAuth.db.collection("audit").get();
           var rows = [];
-          snap.forEach(function (d) { rows.push(d.data()); });
+          snap.forEach(function (d) { var dd = d.data(); if (dd.action === "TEST" && dd.actor === "test") return; rows.push(dd); });
           rows.sort(function (a, b) { return (b.createdAt||"") > (a.createdAt||"") ? 1 : -1; });
           var html = "<table class='admin-table'><thead><tr><th>Waktu</th><th>Aktor</th><th>Aksi</th><th>Target</th></tr></thead><tbody>";
           if (rows.length === 0) html += "<tr><td colspan='4' style='text-align:center; color:var(--ad-muted);'>Belum ada audit log.</td></tr>";
