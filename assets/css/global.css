@@ -1442,3 +1442,88 @@ h1, h2, h3, h4, h5 {
   .btn { padding: 12px 20px; font-size: 14px; }
   .form-card { padding: 20px 16px; }
 }
+
+/* =========================================================
+   BRIGHT THEME OVERRIDE
+   Palet lebih cerah (tidak gelap), tetap profesional.
+   ========================================================= */
+
+:root {
+  --navy: #1e3a8a;
+  --navy-deep: #1e40af;
+  --navy-soft: #2563eb;
+  --blue: #3b82f6;
+  --blue-soft: #dbeafe;
+  --amber: #f59e0b;
+  --amber-soft: #fef3c7;
+  --cream: #ffffff;
+  --ink: #1e293b;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --soft: #f8fafc;
+  --white: #ffffff;
+
+  --shadow-sm: 0 1px 3px rgba(30, 58, 138, 0.08);
+  --shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+  --shadow-lg: 0 10px 25px rgba(30, 58, 138, 0.12);
+}
+
+body { background-color: #ffffff; }
+
+.navbar {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.15);
+}
+.navbar.is-scrolled {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+}
+
+.hero, .about-band, .cta-band {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+}
+
+.footer {
+  background: linear-gradient(135deg, #1e3a8a, #1e40af);
+}
+
+.card:hover {
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.12);
+}
+.card-icon {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  color: var(--blue);
+}
+.card:hover .card-icon {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.btn-primary {
+  background-color: var(--amber);
+  color: var(--navy);
+}
+.btn-primary:hover {
+  background-color: #fbbf24;
+  color: var(--navy);
+  transform: translateY(-2px);
+}
+
+.wa-fab { background-color: #22c55e; }
+
+.hero-tagline { color: #e0e7ff; }
+.section-head p { color: var(--muted); }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --soft: #1e293b;
+    --line: #334155;
+    --ink: #e2e8f0;
+    --muted: #94a3b8;
+  }
+  body { background-color: #0f172a; }
+  .card, .step, .form-card, .price-card { background-color: #1e293b; border-color: var(--line); }
+  .section-alt { background-color: #1e293b; }
+  .form-group input, .form-group select, .form-group textarea { background-color: #0f172a; color: var(--ink); border-color: var(--line); }
+}
