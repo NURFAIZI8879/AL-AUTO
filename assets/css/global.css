@@ -1191,3 +1191,254 @@ body { animation: pageFadeIn 0.5s ease-out; }
   .form-group input, .form-group select, .form-group textarea { background-color: #0f172a; color: var(--ink); border-color: var(--line); }
   .navbar { background-color: rgba(15, 23, 42, 0.97); }
 }
+
+/* =========================================================
+   PROFESSIONAL UI REFINEMENT
+   Palet warna & polish standar industri (tidak terlalu
+   gelap, tidak terlalu terang, kontras seimbang).
+   ========================================================= */
+
+/* ---------- Palet profesional ---------- */
+:root {
+  --navy: #0f172a;
+  --navy-deep: #020617;
+  --navy-soft: #1e293b;
+  --blue: #2563eb;
+  --blue-soft: #dbeafe;
+  --amber: #f59e0b;
+  --amber-soft: #fef3c7;
+  --cream: #f8fafc;
+  --ink: #1e293b;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --soft: #f1f5f9;
+  --white: #ffffff;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(15, 23, 42, 0.06);
+  --speed: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --nav-height: 72px;
+  --container: 1200px;
+}
+
+/* ---------- Base ---------- */
+body {
+  background-color: #f8fafc;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--navy);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Container ---------- */
+.container {
+  max-width: var(--container);
+  padding-left: clamp(20px, 4vw, 32px);
+  padding-right: clamp(20px, 4vw, 32px);
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  background-color: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.navbar.is-scrolled {
+  background-color: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.brand-text {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.brand-text small {
+  color: #94a3b8;
+  letter-spacing: 0.15em;
+}
+
+.nav-link {
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all var(--speed);
+}
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.nav-link.active {
+  font-weight: 600;
+}
+.nav-link.active::after {
+  background-color: var(--amber);
+  height: 2px;
+  border-radius: 1px;
+}
+
+.nav-item.daftar .nav-link {
+  background-color: var(--amber);
+  color: var(--navy);
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+.nav-item.daftar .nav-link:hover {
+  background-color: #fbbf24;
+  color: var(--navy);
+  transform: translateY(-1px);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+.btn-primary {
+  background-color: var(--amber);
+  color: var(--navy);
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #fbbf24;
+  color: var(--navy);
+}
+.btn-outline {
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  color: var(--white);
+}
+.btn-outline:hover {
+  background-color: var(--white);
+  color: var(--navy);
+  border-color: var(--white);
+}
+.btn-navy {
+  background-color: var(--navy);
+  color: var(--white);
+}
+.btn-navy:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--speed);
+  background-color: var(--white);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37, 99, 235, 0.2);
+}
+.card-icon {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #dbeafe, #f1f5f9);
+  color: var(--blue);
+}
+.card:hover .card-icon {
+  background: var(--blue);
+  color: var(--white);
+}
+.card h3 { font-size: 18px; font-weight: 600; }
+.card p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+
+/* ---------- Footer ---------- */
+.footer {
+  background-color: var(--navy);
+  color: #cbd5e1;
+}
+.footer h4 { color: var(--white); font-weight: 600; }
+.footer h4::after { background-color: var(--amber); }
+.footer ul a { color: #cbd5e1; }
+.footer ul a:hover { color: var(--amber); transform: translateX(3px); }
+.footer-contact svg { stroke: var(--amber); }
+.footer p { color: #94a3b8; }
+
+/* ---------- Form ---------- */
+.form-card {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background-color: var(--white);
+  transition: border-color var(--speed), box-shadow var(--speed);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ---------- Section ---------- */
+.section { padding: clamp(48px, 7vw, 80px) 0; }
+.section-head h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 700; }
+.section-head p { color: var(--muted); font-size: 16px; }
+.eyebrow { color: var(--blue); font-weight: 600; letter-spacing: 0.12em; }
+
+/* ---------- Hero ---------- */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 90vh;
+}
+.hero-tagline { color: #cbd5e1; }
+.hero-eyebrow { color: var(--amber); }
+
+/* ---------- WA FAB ---------- */
+.wa-fab {
+  background-color: #22c55e;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+  width: 56px; height: 56px;
+}
+.wa-fab:hover { background-color: #16a34a; transform: scale(1.08); }
+
+/* ---------- Toast ---------- */
+.toast {
+  background-color: var(--navy);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .hero { min-height: auto; padding: 80px 16px 60px; }
+  .navbar-inner { padding: 0 16px; }
+  .brand-text { font-size: 15px; }
+  .brand-text small { font-size: 8.5px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  .cta-inner { flex-direction: column; text-align: center; }
+  .cta-actions { justify-content: center; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .hero-actions .btn { width: 100%; max-width: 280px; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: 40px 0; }
+  .card { padding: 20px 16px; }
+  .btn { padding: 12px 20px; font-size: 14px; }
+  .form-card { padding: 20px 16px; }
+}
