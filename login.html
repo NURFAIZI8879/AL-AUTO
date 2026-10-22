@@ -95,6 +95,11 @@
                                     <label for="reg-website">Website</label>
                                     <input type="text" id="reg-website" name="website" tabindex="-1" autocomplete="off">
                                 </div>
+                                <!-- reCAPTCHA (ganti YOUR_SITE_KEY dengan key dari Google reCAPTCHA) -->
+                                <!--
+                                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" style="margin-bottom:12px;"></div>
+                                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                -->
                                 <button class="btn btn-navy btn-block" type="submit">Daftar</button>
                             </form>
                         </div>
@@ -159,10 +164,10 @@
           e.preventDefault();
           var email = document.getElementById("login-email").value.trim();
           if (!email) { setMsg("Masukkan email terlebih dahulu.", false); return; }
+          if (!window.ALAuth || !window.ALAuth.ready) { setMsg("Firebase belum siap.", false); return; }
           try {
-            var res = await fetch(window.ALAuth.apiBase + "/api/auth/forgot-password", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ email: email }) });
-            var data = await res.json();
-            setMsg(data.message || "Instruksi reset dikirim.", true);
+            await window.ALAuth.auth.sendPasswordResetEmail(email);
+            setMsg("Link reset password telah dikirim ke email Anda.", true);
           } catch (err) { setMsg("Gagal: " + (err.message || err), false); }
         });
       }
@@ -214,7 +219,7 @@
             document.getElementById("reg-password").value,
             document.getElementById("reg-phone").value.trim()
           );
-          setMsg("Pendaftaran berhasil. Menunggu verifikasi admin sebelum fitur absensi aktif.", true);
+          setMsg("Pendaftaran berhasil. Cek email Anda untuk verifikasi, lalu tunggu persetujuan admin.", true);
           document.getElementById("register-form").reset();
         } catch (err) {
           setMsg("Daftar gagal: " + (err.message || err), false);

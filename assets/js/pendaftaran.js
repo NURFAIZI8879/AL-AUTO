@@ -103,8 +103,8 @@
     });
   });
 
-  /* ---------- Kirim via WhatsApp ---------- */
-  form.addEventListener("submit", function (event) {
+  /* ---------- Kirim via WhatsApp + simpan ke database ---------- */
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (!validate()) {
@@ -129,10 +129,28 @@
     var whatsappUrl =
       "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
 
+    // Simpan ke Firestore (jika Firebase aktif)
+    if (window.ALAuth && window.ALAuth.ready && window.ALAuth.db) {
+      try {
+        await window.ALAuth.db.collection("registrations").add({
+          name: nameInput.value.trim(),
+          phone: phoneInput.value.trim(),
+          address: addressInput.value.trim(),
+          package: packageName,
+          price: packageData.price,
+          status: "baru",
+          createdAt: new Date().toISOString()
+        });
+      } catch (e) { console.warn("Gagal simpan pendaftaran:", e); }
+    }
+
     window.open(whatsappUrl, "_blank");
 
     if (window.showToast) {
       window.showToast("Terima kasih! Formulir Anda siap dikirim melalui WhatsApp.");
     }
+
+    form.reset();
+    priceInput.value = "";
   });
 })();

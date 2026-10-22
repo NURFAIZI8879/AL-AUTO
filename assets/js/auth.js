@@ -109,8 +109,10 @@
   async function register(name, email, password, phone) {
     if (!window.ALAuth.ready) throw new Error("Firebase belum siap.");
     var cred = await window.ALAuth.auth.createUserWithEmailAndPassword(email, password);
+    try { await cred.user.sendEmailVerification(); } catch (e) { console.warn("Gagal kirim verifikasi email:", e); }
     await window.ALAuth.db.collection("users").doc(cred.user.uid).set({
       name: name, email: email, phone: phone || "", role: "user", status: "pending",
+      emailVerified: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     return cred;
